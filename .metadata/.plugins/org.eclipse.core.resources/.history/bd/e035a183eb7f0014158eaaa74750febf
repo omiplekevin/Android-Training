@@ -1,0 +1,42 @@
+package com.example.flickrpublicfeeds.helper;
+
+public class Utilities {
+	
+	public static String SendHttpPostRequest1(String function) {
+		BufferedReader reader = null;
+		String data = "";
+		// Send data
+		try {
+
+			// Defined URL where to send data
+			URL url = new URL(function);
+			Log.v("send data :--", function);
+			// Send POST data request
+
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(function);
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+				reader = new BufferedReader(new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+			} else {
+				Log.e("SERVER CONNECTION", "Failed to download file");
+			}
+			return builder.toString();
+		} catch (Exception ex) {
+
+		}
+
+		return "";
+
+	}
+
+}
