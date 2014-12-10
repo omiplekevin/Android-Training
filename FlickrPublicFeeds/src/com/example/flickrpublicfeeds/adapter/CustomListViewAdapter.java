@@ -65,14 +65,6 @@ public class CustomListViewAdapter extends BaseAdapter{
 			holder = (ViewHolder)convertView.getTag();
 		}
 		
-		/*new AsyncTask<Void, Void, Bitmap>() {
-
-			@Override
-			protected Bitmap doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};*/
 		String imageSrc = "";
 		String title = "";
 		String link = "";
