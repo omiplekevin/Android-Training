@@ -12,4 +12,24 @@
 <fullyQualifiedTypeName name="org.json.JSONObject"/>
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="android.os.AsyncTask"/>
+<fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter.ViewHolder"/>
+<fullyQualifiedTypeName name="android.graphics.BitmapFactory"/>
+<fullyQualifiedTypeName name="com.example.customlistview.R.id"/>
+<fullyQualifiedTypeName name="com.example.customlistview.MainActivity"/>
+<fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="com.example.customlistview.CustomSpinnerAdapter"/>
+<fullyQualifiedTypeName name="android.widget.AdapterView.OnItemSelectedListener"/>
+<fullyQualifiedTypeName name="com.example.customlistview.R.drawable"/>
+<fullyQualifiedTypeName name="com.example.customlistview.CustomSpinnerAdapter.ViewHolder"/>
+<fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter.ViewHolder"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.R.id"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.MainActivity"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.CustomContentModel"/>
+<fullyQualifiedTypeName name="android.R"/>
+<fullyQualifiedTypeName name="android.R.drawable"/>
+<fullyQualifiedTypeName name="com.example.listviewsample.R.layout"/>
 </qualifiedTypeNameHistroy>

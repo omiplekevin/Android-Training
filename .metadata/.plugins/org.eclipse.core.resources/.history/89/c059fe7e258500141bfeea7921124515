@@ -1,0 +1,8 @@
+package com.example.listviewsample;
+
+public class CustomContentModel {
+	
+	String textContent;
+	int res;
+
+}
