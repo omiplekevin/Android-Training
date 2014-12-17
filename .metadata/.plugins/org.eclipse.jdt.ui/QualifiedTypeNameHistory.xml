@@ -32,4 +32,8 @@
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.R.drawable"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.R.layout"/>
+<fullyQualifiedTypeName name="com.example.gridviewsample.CustomGridAdapter.ViewHolder"/>
+<fullyQualifiedTypeName name="android.widget.GridView"/>
+<fullyQualifiedTypeName name="com.example.gridviewsample.CustomGridAdapter"/>
+<fullyQualifiedTypeName name="com.example.gridviewsample.R.drawable"/>
 </qualifiedTypeNameHistroy>
