@@ -1,0 +1,10 @@
+package com.example.models;
+
+public class ProductModel {
+
+	int pID;
+	String productName;
+	String productLocation;
+	String date;
+	
+}

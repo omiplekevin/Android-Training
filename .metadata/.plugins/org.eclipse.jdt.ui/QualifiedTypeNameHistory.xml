@@ -4,14 +4,10 @@
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.helper.Utilities"/>
 <fullyQualifiedTypeName name="android.content.IntentFilter"/>
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.MainActivity.ResponseReceiver"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.adapter.CustomListViewAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.R"/>
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.adapter.CustomListViewAdapter"/>
 <fullyQualifiedTypeName name="com.example.flickrpublicfeeds.MainActivity"/>
-<fullyQualifiedTypeName name="org.json.JSONObject"/>
-<fullyQualifiedTypeName name="org.json.JSONArray"/>
-<fullyQualifiedTypeName name="android.os.AsyncTask"/>
 <fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="android.graphics.BitmapFactory"/>
 <fullyQualifiedTypeName name="com.example.customlistview.R.id"/>
@@ -27,7 +23,6 @@
 <fullyQualifiedTypeName name="com.example.listviewsample.R.id"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.MainActivity"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.CustomContentModel"/>
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.R.drawable"/>
@@ -36,4 +31,21 @@
 <fullyQualifiedTypeName name="android.widget.GridView"/>
 <fullyQualifiedTypeName name="com.example.gridviewsample.CustomGridAdapter"/>
 <fullyQualifiedTypeName name="com.example.gridviewsample.R.drawable"/>
+<fullyQualifiedTypeName name="android.widget.SeekBar.OnSeekBarChangeListener"/>
+<fullyQualifiedTypeName name="android.view.SurfaceHolder"/>
+<fullyQualifiedTypeName name="android.view.SurfaceView"/>
+<fullyQualifiedTypeName name="android.hardware.Camera"/>
+<fullyQualifiedTypeName name="android.os.AsyncTask"/>
+<fullyQualifiedTypeName name="com.example.helper.RequestHelper"/>
+<fullyQualifiedTypeName name="org.json.JSONArray"/>
+<fullyQualifiedTypeName name="org.json.JSONObject"/>
+<fullyQualifiedTypeName name="com.example.jsonparsingtolistview.MainActivity"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.example.models.ProductModel"/>
+<fullyQualifiedTypeName name="android.view.View"/>
+<fullyQualifiedTypeName name="com.example.adapter.CustomListAdapter.ViewHolder"/>
+<fullyQualifiedTypeName name="com.example.jsonparsingtolistview.R"/>
+<fullyQualifiedTypeName name="com.example.adapter.CustomListAdapter"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.example.jsonparsingtolistview.R.id"/>
 </qualifiedTypeNameHistroy>
