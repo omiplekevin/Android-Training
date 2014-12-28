@@ -1,0 +1,107 @@
+package com.example.jsonparsingtolistview;
+
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.adapter.CustomListAdapter;
+import com.example.helper.RequestHelper;
+import com.example.helper.Utility;
+import com.example.models.ProductModel;
+
+public class MainActivity extends Activity {
+
+	ListView listView;
+	CustomListAdapter adapter;
+	String URL_SRC = "http://192.168.43.211/basketlist/gallery_get_product.php";
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		listView = (ListView) findViewById(R.id.listView);
+		int networkCheck = Utility.hasInternetAccess(getApplicationContext()); 
+		if (networkCheck == 2) {
+			new AsyncTask<Void, Void, String>() {
+
+				@Override
+				protected String doInBackground(Void... params) {
+					String res = RequestHelper
+							.SendHttpPostRequest1(URL_SRC);
+					Log.e("RESULT", res);
+					return res;
+				}
+
+				@Override
+				protected void onPostExecute(String result) {
+
+					try {
+						JSONArray jsonArray = new JSONArray(result);
+						ProductModel model = null;
+						ArrayList<ProductModel> models = new ArrayList<ProductModel>();
+						for (int i = 0; i < jsonArray.length(); i++) {
+							JSONObject jsonObj = jsonArray.getJSONObject(i);
+
+							Log.e("JSON OBJECT", jsonObj.toString());
+
+							model = new ProductModel();
+							model.pID = Integer.parseInt(jsonObj
+									.getString("product_id"));
+							model.productName = jsonObj
+									.getString("productName");
+							model.productLocation = jsonObj
+									.getString("location");
+							model.date = jsonObj.getString("date");
+							models.add(model);
+						}
+
+						adapter = new CustomListAdapter(
+								getApplicationContext(), models);
+						listView.setAdapter(adapter);
+						listView.invalidate();
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						Log.e("ERROR JSON PARSE", e.getMessage().toString());
+					}
+				}
+			}.execute();
+		} else if(networkCheck == 1) {
+			Toast.makeText(getApplicationContext(), "No response from " + URL_SRC, Toast.LENGTH_LONG).show();
+		} else if(networkCheck == 0) {
+			Toast.makeText(getApplicationContext(), "Connect to avaiable networks and try again.", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}
