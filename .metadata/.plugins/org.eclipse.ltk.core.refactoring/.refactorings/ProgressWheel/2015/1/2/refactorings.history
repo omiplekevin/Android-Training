@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.example.uicomponent.ProgressWhell&apos; to &apos;ProgressWheel&apos;&#x0D;&#x0A;- Original project: &apos;ProgressWheel&apos;&#x0D;&#x0A;- Original element: &apos;com.example.uicomponent.ProgressWhell&apos;&#x0D;&#x0A;- Renamed element: &apos;com.example.uicomponent.ProgressWheel&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;ProgressWhell&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;com.example.uicomponent{ProgressWhell.java[ProgressWhell" matchStrategy="1" name="ProgressWheel" qualified="false" references="true" similarDeclarations="false" stamp="1420769972246" textual="false" version="1.0"/>
+</session>

@@ -1,0 +1,115 @@
+package com.example.progresswheel;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.DragEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Switch;
+
+import com.example.uicomponent.ProgressWheel;
+
+public class MainActivity extends Activity {
+
+	ProgressWheel pw1;
+	AsyncTask<Void, Integer, Void> startSpin;
+	Switch switch1;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		pw1 = (ProgressWheel) findViewById(R.id.progressWheel);
+		pw1.setProgress(0);
+
+		switch1 = (Switch) findViewById(R.id.switch1);
+
+		startSpin = new AsyncTask<Void, Integer, Void>() {
+
+			@Override
+			protected void onPreExecute() {
+				// TODO Auto-generated method stub
+				super.onPreExecute();
+				pw1.setText("0");
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				int i = 0;
+				while (i < 360) {
+					try {
+						Thread.sleep(999);
+						publishProgress(8);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					i += 8;
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				pw1.stopSpinning();
+			}
+
+			@Override
+			protected void onProgressUpdate(Integer... values) {
+				// TODO Auto-generated method stub
+				super.onProgressUpdate(values);
+				int i = Integer.parseInt(pw1.getText()) + values[0];
+				pw1.setProgress(i);
+				pw1.setText(i + "");
+				if (i > 360) {
+					pw1.stopSpinning();
+				}
+			}
+
+		};
+
+		switch1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					pw1.stopSpinning();
+					pw1.setProgress(0);
+					pw1.setText("--");
+				} else {
+					startSpin.execute();
+				}
+			}
+		});
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}

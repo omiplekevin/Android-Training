@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.example.flickrpublicfeeds.adapter.CustomListViewAdapter.ViewHolder"/>
-<fullyQualifiedTypeName name="com.example.flickrpublicfeeds.R"/>
-<fullyQualifiedTypeName name="com.example.flickrpublicfeeds.adapter.CustomListViewAdapter"/>
-<fullyQualifiedTypeName name="com.example.flickrpublicfeeds.MainActivity"/>
 <fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="android.graphics.BitmapFactory"/>
 <fullyQualifiedTypeName name="com.example.customlistview.R.id"/>
@@ -50,7 +46,6 @@
 <fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="android.app.Service"/>
-<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="com.example.basicservice.R.id"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="android.os.AsyncTask"/>
@@ -60,4 +55,9 @@
 <fullyQualifiedTypeName name="com.example.service.CustomService"/>
 <fullyQualifiedTypeName name="com.example.basicservice.MainActivity"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
+<fullyQualifiedTypeName name="android.os.Binder"/>
+<fullyQualifiedTypeName name="com.example.service.CustomService.LocalBinder"/>
+<fullyQualifiedTypeName name="com.example.timereminder.R.id"/>
+<fullyQualifiedTypeName name="com.example.progresswheel.R"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 </qualifiedTypeNameHistroy>
