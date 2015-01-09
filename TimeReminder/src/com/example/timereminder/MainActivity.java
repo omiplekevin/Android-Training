@@ -1,26 +1,57 @@
 package com.example.timereminder;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.receiver.AlarmManagerReceiver;
 
 public class MainActivity extends Activity implements OnClickListener {
 
 	Button startBtn, stopBtn;
-
+	AlarmManagerReceiver alarmReceiver;
+	
+	private int DATA_CHECK_CODE = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		alarmReceiver = new AlarmManagerReceiver();
+		
+		startBtn = (Button)findViewById(R.id.startService);
+		stopBtn = (Button)findViewById(R.id.stopService);
+		
 		startBtn.setOnClickListener(this);
 		stopBtn.setOnClickListener(this);
 		
+		Intent checkTTS = new Intent();
+		checkTTS.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+		startActivityForResult(checkTTS, DATA_CHECK_CODE);
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if(resultCode == DATA_CHECK_CODE) {
+			if(resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+				Intent installTTS = new Intent();
+				installTTS.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+				startActivity(installTTS);
+			}
+		}
+	}
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,12 +84,22 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
+
 	private void startTimeReminder() {
-		
+		Context context = this.getApplicationContext();
+		if (alarmReceiver != null) {
+			alarmReceiver.SetAlarm(context);
+		} else {
+			Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+		}
 	}
-	
+
 	private void stopTimeReminder() {
-		
+		Context context = this.getApplicationContext();
+	     if(alarmReceiver != null){
+	    	 alarmReceiver.CancelAlarm(context);
+	     }else{
+	      Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+	     }
 	}
 }

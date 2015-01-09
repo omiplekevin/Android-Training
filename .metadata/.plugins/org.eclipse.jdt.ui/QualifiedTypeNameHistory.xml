@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter.ViewHolder"/>
-<fullyQualifiedTypeName name="android.graphics.BitmapFactory"/>
-<fullyQualifiedTypeName name="com.example.customlistview.R.id"/>
-<fullyQualifiedTypeName name="com.example.customlistview.MainActivity"/>
-<fullyQualifiedTypeName name="com.example.customlistview.CustomListViewAdapter"/>
-<fullyQualifiedTypeName name="com.example.customlistview.CustomSpinnerAdapter"/>
-<fullyQualifiedTypeName name="android.widget.AdapterView.OnItemSelectedListener"/>
-<fullyQualifiedTypeName name="com.example.customlistview.R.drawable"/>
 <fullyQualifiedTypeName name="com.example.customlistview.CustomSpinnerAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter.ViewHolder"/>
@@ -60,4 +52,12 @@
 <fullyQualifiedTypeName name="com.example.timereminder.R.id"/>
 <fullyQualifiedTypeName name="com.example.progresswheel.R"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="android.widget.Switch"/>
+<fullyQualifiedTypeName name="android.widget.CompoundButton.OnCheckedChangeListener"/>
+<fullyQualifiedTypeName name="android.view.View.OnDragListener"/>
+<fullyQualifiedTypeName name="com.example.progresswheel.MainActivity"/>
+<fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="com.example.receiver.AlarmManagerReceiver"/>
+<fullyQualifiedTypeName name="android.speech.tts.TextToSpeech"/>
 </qualifiedTypeNameHistroy>

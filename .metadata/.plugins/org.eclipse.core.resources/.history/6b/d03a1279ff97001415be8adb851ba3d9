@@ -1,0 +1,8 @@
+package com.example.timereminder;
+
+import android.app.Activity;
+import android.speech.tts.TextToSpeech.OnInitListener;
+
+public class MessageReader extends Activity implements OnInitListener{
+
+}
