@@ -1,0 +1,87 @@
+package com.example.receiver;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
+
+import com.example.service.MessageReaderService;
+
+public class AlarmManagerReceiver extends BroadcastReceiver {
+
+	final public static String ONE_TIME = "onetime";
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		// TODO Auto-generated method stub
+		PowerManager pm = (PowerManager) context
+				.getSystemService(Context.POWER_SERVICE);
+		PowerManager.WakeLock wl = pm.newWakeLock(
+				PowerManager.PARTIAL_WAKE_LOCK, "POWER_MANAGER");
+		// Acquire the lock
+		wl.acquire();
+
+		// You can do the processing here.
+		Bundle extras = intent.getExtras();
+		StringBuilder msgStr = new StringBuilder();
+
+		if (extras != null && extras.getBoolean(ONE_TIME, Boolean.FALSE)) {
+			// Make sure this intent has been sent by the one-time timer button.
+			msgStr.append("One time Timer : ");
+		}
+		Format formatter = new SimpleDateFormat("hh:mm:ss a");
+		msgStr.append(formatter.format(new Date()));
+
+//		Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
+		
+		Intent speakIntent = new Intent();
+		speakIntent.setClass(context, MessageReaderService.class);
+		speakIntent.putExtra("MSG", msgStr.toString());
+		context.startService(speakIntent);
+		// Release the lock
+	}
+
+	public void SetAlarm(Context context) {
+		/*AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(context, AlarmManagerReceiver.class);
+		intent.putExtra(ONE_TIME, Boolean.FALSE);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);*/
+		
+		/*am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+				1000 * 15, pi);*/
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(System.currentTimeMillis());
+		cal.set(Calendar.HOUR, cal.get(Calendar.HOUR)+1);
+		Log.e("Calendar time", System.currentTimeMillis() + " " + cal.getTimeInMillis()+" ");
+		//scheduled @ CURRENT TIME + 1 sec, and will be repeated every hour.
+//		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, 1000, AlarmManager.INTERVAL_HOUR, pi);
+	}
+
+	public void CancelAlarm(Context context) {
+		Intent intent = new Intent(context, AlarmManagerReceiver.class);
+		PendingIntent sender = PendingIntent
+				.getBroadcast(context, 0, intent, 0);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(sender);
+	}
+
+	public void setOnetimeTimer(Context context) {
+		AlarmManager am = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(context, AlarmManagerReceiver.class);
+		intent.putExtra(ONE_TIME, Boolean.TRUE);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
+	}
+}

@@ -12,9 +12,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.example.timereminder.MessageReaderService;
+import com.example.service.MessageReaderService;
 
 public class AlarmManagerReceiver extends BroadcastReceiver {
 
@@ -38,7 +39,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 			// Make sure this intent has been sent by the one-time timer button.
 			msgStr.append("One time Timer : ");
 		}
-		Format formatter = new SimpleDateFormat("hh:mm:ss a");
+		Format formatter = new SimpleDateFormat("hh:mm a");
 		msgStr.append(formatter.format(new Date()));
 
 //		Toast.makeText(context, msgStr, Toast.LENGTH_LONG).show();
@@ -56,14 +57,20 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 		Intent intent = new Intent(context, AlarmManagerReceiver.class);
 		intent.putExtra(ONE_TIME, Boolean.FALSE);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
+		
 		/*am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
 				1000 * 15, pi);*/
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
-		cal.set(Calendar.HOUR, cal.get(Calendar.HOUR));
+		cal.set(Calendar.HOUR, cal.get(Calendar.HOUR)+1);
+		cal.set(Calendar.MINUTE, 00);
+		cal.set(Calendar.SECOND, 00);
+		cal.set(Calendar.MILLISECOND, 00);
 		
+		Log.e("Calendar time", System.currentTimeMillis() + " " + cal.getTimeInMillis());
 		//scheduled @ CURRENT TIME + 1 sec, and will be repeated every hour.
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, 1000, AlarmManager.INTERVAL_HOUR, pi);
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pi);
+		Toast.makeText(context, "Reminder will be on the next hour", Toast.LENGTH_SHORT).show();
 	}
 
 	public void CancelAlarm(Context context) {
@@ -73,6 +80,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(sender);
+		Toast.makeText(context, "Reminder stopped", Toast.LENGTH_SHORT).show();
 	}
 
 	public void setOnetimeTimer(Context context) {

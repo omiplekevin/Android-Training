@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.example.customlistview.CustomSpinnerAdapter.ViewHolder"/>
-<fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
-<fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter.ViewHolder"/>
-<fullyQualifiedTypeName name="com.example.listviewsample.R.id"/>
-<fullyQualifiedTypeName name="com.example.listviewsample.CustomListAdapter"/>
-<fullyQualifiedTypeName name="com.example.listviewsample.MainActivity"/>
-<fullyQualifiedTypeName name="com.example.listviewsample.CustomContentModel"/>
-<fullyQualifiedTypeName name="android.R"/>
-<fullyQualifiedTypeName name="android.R.drawable"/>
 <fullyQualifiedTypeName name="com.example.listviewsample.R.layout"/>
 <fullyQualifiedTypeName name="com.example.gridviewsample.CustomGridAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="android.widget.GridView"/>
@@ -37,7 +28,6 @@
 <fullyQualifiedTypeName name="android.os.Build.VERSION_CODES"/>
 <fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
-<fullyQualifiedTypeName name="android.app.Service"/>
 <fullyQualifiedTypeName name="com.example.basicservice.R.id"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="android.os.AsyncTask"/>
@@ -59,5 +49,15 @@
 <fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="com.example.receiver.AlarmManagerReceiver"/>
+<fullyQualifiedTypeName name="android.support.v4.widget.SearchViewCompatIcs.MySearchView"/>
+<fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.Engine"/>
+<fullyQualifiedTypeName name="com.example.timereminder.MainActivity"/>
+<fullyQualifiedTypeName name="java.util.Locale"/>
+<fullyQualifiedTypeName name="com.example.timereminder.MessageReader"/>
+<fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.OnInitListener"/>
+<fullyQualifiedTypeName name="android.app.Service"/>
+<fullyQualifiedTypeName name="android.speech.tts.UtteranceProgressListener"/>
+<fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.OnUtteranceCompletedListener"/>
 <fullyQualifiedTypeName name="android.speech.tts.TextToSpeech"/>
+<fullyQualifiedTypeName name="java.util.Calendar"/>
 </qualifiedTypeNameHistroy>
