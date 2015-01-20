@@ -46,14 +46,14 @@ public class MessageReaderService extends Service implements OnInitListener, OnU
             		x = "morning";
             	}
             	
-            	/*try {
+            	try {
             	    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             	    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
             	    r.play();
             	    Thread.sleep(2000);
             	} catch (Exception e) {
             	    e.printStackTrace();
-            	}*/
+            	}
             	
             	String newMsg = message.substring(0, message.length()-2);
                 tts.speak("It's now " + newMsg + " in the " + x, TextToSpeech.QUEUE_FLUSH, null);

@@ -58,8 +58,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 		intent.putExtra(ONE_TIME, Boolean.FALSE);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		
-		/*am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-				1000 * 15, pi);*/
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.HOUR, cal.get(Calendar.HOUR)+1);
@@ -70,6 +69,11 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 		Log.e("Calendar time", System.currentTimeMillis() + " " + cal.getTimeInMillis());
 		//scheduled @ CURRENT TIME + 1 sec, and will be repeated every hour.
 		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pi);
+		
+		/*am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+		1000 * 5, pi);*/
+		
+		
 		Toast.makeText(context, "Reminder will be on the next hour", Toast.LENGTH_SHORT).show();
 	}
 
