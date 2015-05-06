@@ -1,0 +1,55 @@
+package com.omiplekevin.basicservice;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+public class BasicService extends Service{
+	
+	ScheduledExecutorService mScheduledExecutorService;
+	boolean PINGER_STARTED = false;
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+	
+	@Override
+	public void onCreate() {
+		android.util.Log.e("BasicService","onCreate()");
+		mScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+		super.onCreate();
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		android.util.Log.e("BasicService","onStartCommand()");
+		if(!PINGER_STARTED) {
+			PINGER_STARTED = true;
+			mScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					android.util.Log.e("BasicService","Do Something here!");
+					Intent mBroadcastIntent = new Intent();
+					mBroadcastIntent.setAction("com.omiplekevin.BasicService");
+					sendBroadcast(mBroadcastIntent);
+				}
+			}, 1, 1, TimeUnit.SECONDS);
+		}
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
+	@Override
+	public void onDestroy() {
+		android.util.Log.e("BasicService","onDestroy()");
+		mScheduledExecutorService.shutdown();
+		super.onDestroy();
+	}
+
+}

@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.example.timereminder.R.id"/>
-<fullyQualifiedTypeName name="com.example.progresswheel.R"/>
-<fullyQualifiedTypeName name="android.widget.Switch"/>
-<fullyQualifiedTypeName name="android.widget.CompoundButton.OnCheckedChangeListener"/>
-<fullyQualifiedTypeName name="android.view.View.OnDragListener"/>
-<fullyQualifiedTypeName name="com.example.progresswheel.MainActivity"/>
-<fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
-<fullyQualifiedTypeName name="java.util.Date"/>
-<fullyQualifiedTypeName name="com.example.receiver.AlarmManagerReceiver"/>
-<fullyQualifiedTypeName name="android.support.v4.widget.SearchViewCompatIcs.MySearchView"/>
 <fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.Engine"/>
 <fullyQualifiedTypeName name="com.example.timereminder.MainActivity"/>
 <fullyQualifiedTypeName name="java.util.Locale"/>
 <fullyQualifiedTypeName name="com.example.timereminder.MessageReader"/>
 <fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.OnInitListener"/>
-<fullyQualifiedTypeName name="android.app.Service"/>
 <fullyQualifiedTypeName name="android.speech.tts.UtteranceProgressListener"/>
 <fullyQualifiedTypeName name="android.speech.tts.TextToSpeech.OnUtteranceCompletedListener"/>
 <fullyQualifiedTypeName name="android.speech.tts.TextToSpeech"/>
@@ -41,7 +30,6 @@
 <fullyQualifiedTypeName name="android.os.Handler.Callback"/>
 <fullyQualifiedTypeName name="com.example.asyncsample.MainActivity"/>
 <fullyQualifiedTypeName name="android.os.Looper"/>
-<fullyQualifiedTypeName name="java.lang.Runnable"/>
 <fullyQualifiedTypeName name="android.os.Handler"/>
 <fullyQualifiedTypeName name="com.jmcandroid.adapters.BasicListViewAdapter.ViewHolder"/>
 <fullyQualifiedTypeName name="com.jmcandroid.listviewactivity.R"/>
@@ -53,11 +41,23 @@
 <fullyQualifiedTypeName name="android.widget.AdapterView.OnItemClickListener"/>
 <fullyQualifiedTypeName name="android.app.AlertDialog.Builder"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.content.DialogInterface"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.R.drawable"/>
 <fullyQualifiedTypeName name="android.app.AlertDialog"/>
 <fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
+<fullyQualifiedTypeName name="android.app.Service"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="java.util.concurrent.ScheduledExecutorService"/>
+<fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
+<fullyQualifiedTypeName name="java.util.concurrent.TimeUnit"/>
+<fullyQualifiedTypeName name="android.animation.ObjectAnimator"/>
+<fullyQualifiedTypeName name="com.omiplekevin.smoothprogressbar.MainActivity"/>
+<fullyQualifiedTypeName name="java.lang.Runnable"/>
+<fullyQualifiedTypeName name="android.animation.TimeInterpolator"/>
+<fullyQualifiedTypeName name="android.view.animation.DecelerateInterpolator"/>
+<fullyQualifiedTypeName name="android.view.animation.AccelerateDecelerateInterpolator"/>
+<fullyQualifiedTypeName name="android.view.animation.LinearInterpolator"/>
 </qualifiedTypeNameHistroy>
