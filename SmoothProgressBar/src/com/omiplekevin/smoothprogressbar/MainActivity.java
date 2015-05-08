@@ -1,23 +1,21 @@
 package com.omiplekevin.smoothprogressbar;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import android.animation.ObjectAnimator;
-import android.animation.TimeInterpolator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
 
 	ProgressBar mProgressBar;
+	ObjectAnimator mAnimation;
+	long mCurrentPlayAnimation;
+	boolean mAnimationPause = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +23,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
-		mProgressBar.setMax(1500);
+		mProgressBar.setMax(3000);
 		mProgressBar.invalidate();
 
-		ObjectAnimator animation = ObjectAnimator.ofInt(
-				mProgressBar, "progress", 1500);
-		animation.setInterpolator(new LinearInterpolator());
-		animation.setDuration(15000);
-		animation.start();
+		mAnimation = ObjectAnimator.ofInt(mProgressBar, "progress", 3000);
+		mAnimation.setInterpolator(new LinearInterpolator());
+		mAnimation.setDuration(30000);
+		mAnimation.start();
 
 	}
 
@@ -53,5 +50,21 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void pauseAnimation(View v) {
+		if (!mAnimationPause) {
+			mCurrentPlayAnimation = mAnimation.getCurrentPlayTime();
+			mAnimation.cancel();
+			mAnimationPause = true;
+		}
+	}
+
+	public void resumeAnimation(View v) {
+		if (mAnimationPause) {
+			mAnimation.start();
+			mAnimation.setCurrentPlayTime(mCurrentPlayAnimation);
+			mAnimationPause = false;
+		}
 	}
 }
