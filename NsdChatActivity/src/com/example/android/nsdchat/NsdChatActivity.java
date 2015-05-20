@@ -16,6 +16,11 @@
 
 package com.example.android.nsdchat;
 
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import android.app.Activity;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
@@ -25,8 +30,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.example.android.nsdchat.NsdHelper;
 
 public class NsdChatActivity extends Activity {
 
@@ -63,6 +66,7 @@ public class NsdChatActivity extends Activity {
 
     public void clickAdvertise(View v) {
         // Register service
+    	android.util.Log.e("LOCAL_PORT", mConnection.getLocalPort() + "");
         if(mConnection.getLocalPort() > -1) {
             mNsdHelper.registerService(mConnection.getLocalPort());
         } else {
@@ -90,14 +94,22 @@ public class NsdChatActivity extends Activity {
         if (messageView != null) {
             String messageString = messageView.getText().toString();
             if (!messageString.isEmpty()) {
-                mConnection.sendMessage(messageString);
+                ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+                service.scheduleAtFixedRate(new Runnable() {
+					
+					@Override
+					public void run() {
+						Random rand = new Random();
+						mConnection.sendMessage(rand.nextInt(60) + "");
+					}
+				}, 5, 1, TimeUnit.SECONDS);
             }
             messageView.setText("");
         }
     }
 
     public void addChatLine(String line) {
-        mStatusView.append("\n" + line);
+        mStatusView.append(" - " + line);
     }
 
     @Override
