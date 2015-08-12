@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">DemoApplicationAMPINGAT</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string-array name="tabPages">
+        <item>Emergency</item>
+        <item>EAP</item>
+        <item>First Aid</item>
+        <item>Extras</item>
+    </string-array>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
