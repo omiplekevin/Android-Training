@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+/**
+ * Main Activity: main class of the application
+ */
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
 
     /**
