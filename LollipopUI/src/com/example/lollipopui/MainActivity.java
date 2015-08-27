@@ -99,4 +99,8 @@ public class MainActivity extends Activity {
 		phones.close();
 
 	}
+
+	/**
+	ADDED COMMENT FOR THIS PARTICULAR LINE!
+	*/
 }
