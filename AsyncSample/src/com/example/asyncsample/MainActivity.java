@@ -20,8 +20,8 @@ public class MainActivity extends Activity {
 
 		textView = (TextView) findViewById(R.id.asyncState);
 
-		// startAsync();
-		startThread(10);
+		startAsync();
+		// startThread(10);
 	}
 
 	public void startAsync() {
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 		}.execute();
 	}
 
-	public void startThread(int x) {
+	/*public void startThread(int x) {
 		Runnable run = new Runnable() {
 
 			@Override
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 
 	private void updateText(String x) {
 		textView.setText(x);
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

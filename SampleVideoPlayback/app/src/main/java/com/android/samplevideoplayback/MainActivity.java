@@ -6,11 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import java.io.File;
 
 public class MainActivity extends FragmentActivity {
 
@@ -22,7 +25,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*//bind view to object
+        //bind view to object
         mVideoView = (VideoView)findViewById(R.id.videoEntry);
 
         //initialize MediaController, if you don't want to use MediaControls, ignore this line
@@ -33,13 +36,14 @@ public class MainActivity extends FragmentActivity {
         //since you'll be reading from internal/external directory
         //use Environment.getExternalStorageDirectory() + path to your video
         //Environment.getExternalStorageDirectory() covers internal and external storage
-        mVideoView.setVideoURI(Uri.parse(Environment.getExternalStorageDirectory() + "/Download/sample.mp4"));
+        File file = new File(Environment.getExternalStorageDirectory() + "/amp");
+        mVideoView.setVideoURI(Uri.parse(Environment.getExternalStorageDirectory() + "/amp/sample.mp4"));
 
         //set media controller for Video View, if you don't want to use MediaControls, ignore this line
         mVideoView.setMediaController(mMediaController);
 
         //start video playback
-        mVideoView.start();*/
+        mVideoView.start();
 
     }
 
