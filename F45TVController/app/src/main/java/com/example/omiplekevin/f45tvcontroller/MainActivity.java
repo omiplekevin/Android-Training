@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.vi.swipenumberpicker.OnValueChangeListener;
+import com.vi.swipenumberpicker.SwipeNumberPicker;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +26,10 @@ import java.util.TreeMap;
 public class MainActivity extends AppCompatActivity {
 
     Button startBtn, pauseBtn, stopBtn, ffBtn;
-    EditText ipAddr, ffValue;
+    EditText ipAddr, commandValue;
+    SwipeNumberPicker numberPicker;
     boolean isPaused = false;
+    int forwardValue = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,15 @@ public class MainActivity extends AppCompatActivity {
         ffBtn = (Button) findViewById(R.id.ffBtn);
 
         ipAddr = (EditText) findViewById(R.id.ipAddr);
-        ffValue = (EditText) findViewById(R.id.ffValue);
+        commandValue = (EditText) findViewById(R.id.commandValue);
+        numberPicker = (SwipeNumberPicker) findViewById(R.id.number_picker);
+        numberPicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker swipeNumberPicker, int oldValue, int newValue) {
+                forwardValue = newValue;
+                return true;
+            }
+        });
     }
 
     @Override
@@ -61,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void start(View v){
-        if (!ipAddr.getText().toString().isEmpty()){
+    public void start(View v) {
+        if (!ipAddr.getText().toString().isEmpty()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -72,11 +86,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void pause(View v){
+    public void pause(View v) {
         if (!isPaused) {
             isPaused = true;
             pauseBtn.setText("Resume");
-            if (!ipAddr.getText().toString().isEmpty()){
+            if (!ipAddr.getText().toString().isEmpty()) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -87,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             isPaused = false;
             pauseBtn.setText("Pause");
-            if (!ipAddr.getText().toString().isEmpty()){
+            if (!ipAddr.getText().toString().isEmpty()) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -99,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
-        if (!ipAddr.getText().toString().isEmpty()){
+        if (!ipAddr.getText().toString().isEmpty()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -109,51 +123,69 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void ff(View view) {
-        if (!ffValue.getText().toString().isEmpty() && !ipAddr.getText().toString().isEmpty()){
+    public void messageCommand(View view) {
+        if (!commandValue.getText().toString().isEmpty() && !ipAddr.getText().toString().isEmpty()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    sendHttpRequest("http://" + ipAddr.getText() + ":12345/?message=" + ffValue.getText().toString(), false, null, "GET", null);
+                    sendHttpRequest("http://" + ipAddr.getText() + ":12345/?message=" + commandValue.getText().toString(), false, null, "GET", null);
                 }
             }).start();
         }
     }
 
-    public static String sendHttpRequest(String sourceUrl, boolean enableCacheConfig, String fileName, String method, TreeMap<String, String> map){
+    public void rwValue(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendHttpRequest("http://" + ipAddr.getText() + ":12345/?message=ff|-" + forwardValue, false, null, "GET", null);
+            }
+        }).start();
+    }
+
+    public void ffValue(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendHttpRequest("http://" + ipAddr.getText() + ":12345/?message=ff|" + forwardValue, false, null, "GET", null);
+            }
+        }).start();
+    }
+
+    public static String sendHttpRequest(String sourceUrl, boolean enableCacheConfig, String fileName, String method, TreeMap<String, String> map) {
         StringBuilder responseString = new StringBuilder();
         Log.e("CONTROLLER", "sending: " + sourceUrl);
         try {
             //throws MalformedURLException
             URL urlSource = new URL(sourceUrl);
             //throws IOException
-            HttpURLConnection httpUrlConnection = (HttpURLConnection)urlSource.openConnection();
+            HttpURLConnection httpUrlConnection = (HttpURLConnection) urlSource.openConnection();
             httpUrlConnection.setRequestMethod(method.toUpperCase(Locale.getDefault()));
             httpUrlConnection.setConnectTimeout(10000);
 
-            if (method.equals("POST")){
+            if (method.equals("POST")) {
                 StringBuilder params = new StringBuilder();
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     params.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
                 }
                 httpUrlConnection.setDoOutput(true);
                 httpUrlConnection.setInstanceFollowRedirects(false);
-                httpUrlConnection.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
+                httpUrlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 httpUrlConnection.setRequestProperty("charset", "utf-8");
                 OutputStreamWriter writer = new OutputStreamWriter(httpUrlConnection.getOutputStream());
-                writer.write(params.substring(0, params.length()-1));
+                writer.write(params.substring(0, params.length() - 1));
                 writer.flush();
             }
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
             String line;
 
-            while((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 responseString.append(line);
             }
 
             httpUrlConnection.getInputStream().close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return responseString.toString();
