@@ -35,7 +35,7 @@ public class F45ScheduleTableManager {
                 int tempMorningMax = 0;
                 for (Map.Entry<String, F45ScheduleStrip> f45ScheduleStrip : subscribers.entrySet()) {
                     if (day.equals(f45ScheduleStrip.getKey())) {
-                        Log.e("Manager", "changing @ " + day);
+//                        Log.e("Manager", "changing @ " + day);
                         f45ScheduleStrip.getValue().onMorningListSizeChange(new Random().nextInt(5));
                     }
 
@@ -52,7 +52,7 @@ public class F45ScheduleTableManager {
                 int tempAfternoonMax = 0;
                 for (Map.Entry<String, F45ScheduleStrip> f45ScheduleStrip : subscribers.entrySet()) {
                     if (day.equals(f45ScheduleStrip.getKey())) {
-                        Log.e("Manager", "changing @ " + day);
+//                        Log.e("Manager", "changing @ " + day);
                         f45ScheduleStrip.getValue().onAfternoonListSizeChange(new Random().nextInt(5));
                     }
 
@@ -69,7 +69,7 @@ public class F45ScheduleTableManager {
                 int tempEveningMax = 0;
                 for (Map.Entry<String, F45ScheduleStrip> f45ScheduleStrip : subscribers.entrySet()) {
                     if (day.equals(f45ScheduleStrip.getKey())) {
-                        Log.e("Manager", "changing @ " + day);
+//                        Log.e("Manager", "changing @ " + day);
                         f45ScheduleStrip.getValue().onEveningListSizeChange(new Random().nextInt(5));
                     }
 
@@ -83,7 +83,7 @@ public class F45ScheduleTableManager {
                 MAX_EVENING_COUNT = tempEveningMax;
                 break;
         }
-        Log.e("Manager", MAX_MORNING_COUNT + " " + MAX_AFTERNOON_COUNT + " " + MAX_EVENING_COUNT);
+//        Log.e("Manager", MAX_MORNING_COUNT + " " + MAX_AFTERNOON_COUNT + " " + MAX_EVENING_COUNT);
     }
 
     public boolean balanceTables() {

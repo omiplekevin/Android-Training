@@ -49,12 +49,12 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
     @Override
     public void onMorningListSizeChange(int newSize) {
         if (scheduleGroupMorning != null) {
-            Log.e("Strip", "child count:" + scheduleGroupMorning.getChildCount());
+//            Log.e("Strip", "child count:" + scheduleGroupMorning.getChildCount());
             if (scheduleGroupMorning.getChildCount() > 0) {
-                Log.e("Strip", "removing " + scheduleGroupMorning.getChildCount() + " views");
+//                Log.e("Strip", "removing " + scheduleGroupMorning.getChildCount() + " views");
                 scheduleGroupMorning.removeAllViews();
             }
-            Log.e("Strip", "adding " + newSize + " views");
+//            Log.e("Strip", "adding " + newSize + " views");
             for (int i = 0; i < newSize; i++) {
                 TextView textView = new TextView(context);
                 textView.setText("COUNTING " + newSize);
@@ -69,12 +69,12 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
     @Override
     public void onAfternoonListSizeChange(int newSize) {
         if (scheduleGroupAfternoon != null) {
-            Log.e("Strip", "child count:" + scheduleGroupAfternoon.getChildCount());
+//            Log.e("Strip", "child count:" + scheduleGroupAfternoon.getChildCount());
             if (scheduleGroupAfternoon.getChildCount() > 0) {
-                Log.e("Strip", "removing " + scheduleGroupAfternoon.getChildCount() + " views");
+//                Log.e("Strip", "removing " + scheduleGroupAfternoon.getChildCount() + " views");
                 scheduleGroupAfternoon.removeAllViews();
             }
-            Log.e("Strip", "adding " + newSize + " views");
+//            Log.e("Strip", "adding " + newSize + " views");
             for (int i = 0; i < newSize; i++) {
                 TextView textView = new TextView(context);
                 textView.setText("COUNTING " + newSize);
@@ -89,12 +89,12 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
     @Override
     public void onEveningListSizeChange(int newSize) {
         if (scheduleGroupEvening != null) {
-            Log.e("Strip", "child count:" + scheduleGroupEvening.getChildCount());
+//            Log.e("Strip", "child count:" + scheduleGroupEvening.getChildCount());
             if (scheduleGroupEvening.getChildCount() > 0) {
-                Log.e("Strip", "removing " + scheduleGroupEvening.getChildCount() + " views");
+//                Log.e("Strip", "removing " + scheduleGroupEvening.getChildCount() + " views");
                 scheduleGroupEvening.removeAllViews();
             }
-            Log.e("Strip", "adding " + newSize + " views");
+//            Log.e("Strip", "adding " + newSize + " views");
             for (int i = 0; i < newSize; i++) {
                 TextView textView = new TextView(context);
                 textView.setText("COUNTING " + newSize);
@@ -141,10 +141,10 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
     }
 
     private void padTables(LinearLayout view, int maxValue) {
-        Log.e("Strip", "padding consideration value: " + maxValue + " / " + view.getChildCount());
+//        Log.e("Strip", "padding consideration value: " + maxValue + " / " + view.getChildCount());
         //lets pad it!
         int neededPads = (maxValue - view.getChildCount());
-        Log.e("Strip", "adding " + neededPads + " pads");
+//        Log.e("Strip", "adding " + neededPads + " pads");
         if (neededPads > 0) {
             for (int i = 0; i < neededPads; i++) {
                 TextView text = new TextView(context);
@@ -155,7 +155,7 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
             }
         } else if (neededPads < 0) {
             for (int i = 0; i < Math.abs(neededPads); i++) {
-                Log.e("Strip", "removing " + view.getChildCount());
+//                Log.e("Strip", "removing " + view.getChildCount());
                 view.removeViewAt(view.getChildCount()-1);
             }
         }
