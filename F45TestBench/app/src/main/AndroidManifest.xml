@@ -31,7 +31,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".uicomponent.F45ScheduleStrip" />
-        <activity android:name=".CustomTableActivity"></activity>
+        <activity android:name=".CustomTableActivity" />
+        <activity android:name=".DualViewPager" />
+        <activity android:name=".F45Animations" />
+        <activity android:name=".FlipAnimationActivity"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,12 @@
 package com.omiplekevin.android.f45testbench;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void hide() {
         // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
+            ActionBar actionBar = getActionBar();
             if (actionBar != null) {
                 actionBar.show();
             }
@@ -206,6 +207,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void customCell(View view) {
         Intent intent = new Intent(this, CustomTableActivity.class);
+        startActivity(intent);
+    }
+
+    public void dualViewPager(View view) {
+        Intent intent = new Intent(this, DualViewPager.class);
+        startActivity(intent);
+    }
+
+    public void f45Animations(View view) {
+        Intent intent = new Intent(this, F45Animations.class);
+        startActivity(intent);
+    }
+
+    public void flippingAnimation(View view) {
+        Intent intent = new Intent(this, FlipAnimationActivity.class);
         startActivity(intent);
     }
 }
