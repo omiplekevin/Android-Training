@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import com.omiplekevin.android.f45testbench.adapters.TrackingPagerAdapter;
 import com.omiplekevin.android.f45testbench.adapters.WeekPagerAdapter;
 import com.omiplekevin.android.f45testbench.dao.CustomTrackingModel;
 
@@ -28,8 +29,10 @@ public class DualViewPager extends FragmentActivity {
     private ViewPager weekPager;
     private ViewPager trackingPager;
     private LinkedHashMap<Integer, List<CustomTrackingModel>> listOfInclusiveDates;
+    private List<CustomTrackingModel> trackingModelList;
     private Calendar sysCal = Calendar.getInstance(Locale.getDefault());
     private WeekPagerAdapter weekPagerAdapter;
+    private TrackingPagerAdapter trackingPagerAdapter;
 
     private static WeekDayInteractionListener listener;
 
@@ -54,6 +57,7 @@ public class DualViewPager extends FragmentActivity {
 
         listOfInclusiveDates = createWeekList(startDate, endDate);
         fillInDatePadding();
+        setupDefaults();
 
         listener = new WeekDayInteractionListener() {
             @Override
@@ -63,9 +67,7 @@ public class DualViewPager extends FragmentActivity {
                 sCal.setTime(new Date(item.timestamp));
                 Log.d("DualViewPager", String.valueOf(sCal.get(Calendar.MONTH)) + "/" + String.valueOf(sCal.get(Calendar.DATE)) + " selected");
                 updateInclusiveDates(item);
-                weekPagerAdapter = new WeekPagerAdapter(getSupportFragmentManager(), listOfInclusiveDates, listener);
-                weekPager.setAdapter(weekPagerAdapter);
-                weekPager.setCurrentItem(weekPagerAdapter.getActiveIndex());
+                weekPagerAdapter.notifyDataSetChanged();
             }
         };
 
@@ -74,29 +76,30 @@ public class DualViewPager extends FragmentActivity {
 
     }
 
-    public interface WeekDayInteractionListener{
+    public interface WeekDayInteractionListener {
         void onWeekdaySelected(CustomTrackingModel item);
     }
 
     private void setUpWeekPager(WeekDayInteractionListener listener) {
         weekPagerAdapter = new WeekPagerAdapter(getSupportFragmentManager(), listOfInclusiveDates, listener);
-        weekPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         if (weekPager != null) {
+            weekPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             if (weekPagerAdapter != null) {
                 weekPager.setAdapter(weekPagerAdapter);
             } else {
@@ -109,7 +112,33 @@ public class DualViewPager extends FragmentActivity {
     }
 
     private void setUpTrackingPager() {
+        trackingPagerAdapter = new TrackingPagerAdapter(getSupportFragmentManager(), trackingModelList);
+        if (trackingPager != null) {
+            trackingPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+            if (trackingPagerAdapter != null) {
+                trackingPager.setAdapter(trackingPagerAdapter);
+            } else {
+                Log.e(TAG, "trackingPagerAdapter is null");
+            }
+            trackingPager.setAdapter(trackingPagerAdapter);
+        } else {
+            Log.e(TAG, "trackingPager is null");
+        }
     }
 
     private LinkedHashMap<Integer, List<CustomTrackingModel>> createWeekList(Date startDate, Date endDate) {
@@ -134,7 +163,7 @@ public class DualViewPager extends FragmentActivity {
             Date result = calendar.getTime();
             boolean isStartDate = (calendar.getTime().getTime() == startDate.getTime());
             boolean isEndDate = (calendar.getTime().getTime() == endDate.getTime());
-            boolean isInclusiveDate = result.after(startDate) && result.before(endDate);
+            boolean isInclusiveDate = (result.after(startDate) && result.before(endDate)) || isStartDate;
 
             //get current SYSTEM DATE and compare if current loop date is equal to SYSTEM DATE
             String systemDate = String.valueOf(sysCal.get(Calendar.YEAR)) +
@@ -152,10 +181,17 @@ public class DualViewPager extends FragmentActivity {
                     "content: WoY " + weekOfYear + ", " + result.getTime(),
                     isStartDate,
                     isEndDate,
-                    isInclusiveDate,
+                    isInclusiveDate || isStartDate || isEndDate,
                     isCurrentTracking);
             model.isSelected = isCurrentTracking;
 
+
+            if (trackingModelList == null) {
+                trackingModelList = new ArrayList<>();
+            }
+
+            //add to independent tracking list
+            trackingModelList.add(model);
             //add it to the list of dates for WEEK_OF_YEAR
             dates.add(model);
             //add it to the mapping
@@ -207,7 +243,6 @@ public class DualViewPager extends FragmentActivity {
                                 false);
                     }
                 }
-                Log.d("fillDatePads", Arrays.deepToString(a));
                 //primitive to List<T>
                 List<CustomTrackingModel> newList = new ArrayList<>();
                 newList.addAll(Arrays.asList(a));
@@ -220,10 +255,23 @@ public class DualViewPager extends FragmentActivity {
     private void updateInclusiveDates(CustomTrackingModel refItem) {
         for (Map.Entry<Integer, List<CustomTrackingModel>> parentItem : listOfInclusiveDates.entrySet()) {
             for (CustomTrackingModel innerItem : parentItem.getValue()) {
-                if (refItem.timestamp == innerItem.timestamp){
-                    innerItem.isSelected = true;
-                } else {
-                    innerItem.isSelected = false;
+                if (refItem.weekOfYear == innerItem.weekOfYear) {
+                    if (refItem.timestamp == innerItem.timestamp) {
+                        innerItem.isSelected = true;
+                    } else {
+                        innerItem.isSelected = false;
+                    }
+                }
+            }
+        }
+    }
+
+    private void setupDefaults() {
+        for (Map.Entry<Integer, List<CustomTrackingModel>> entry : listOfInclusiveDates.entrySet()) {
+            for (int i = 0; i < entry.getValue().size(); i++) {
+                CustomTrackingModel item = entry.getValue().get(i);
+                if (item.isInclusiveDate && (i == 0 || item.isStartDate)) {
+                    item.isSelected = true;
                 }
             }
         }

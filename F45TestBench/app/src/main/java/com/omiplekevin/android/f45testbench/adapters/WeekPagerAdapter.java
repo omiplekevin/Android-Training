@@ -3,6 +3,7 @@ package com.omiplekevin.android.f45testbench.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 
 import com.omiplekevin.android.f45testbench.DualViewPager;
 import com.omiplekevin.android.f45testbench.dao.CustomTrackingModel;
@@ -38,6 +39,11 @@ public class WeekPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return PagerAdapter.POSITION_NONE;
+    }
+
+    @Override
     public int getCount() {
         return listOfInclusiveDates.size();
     }
@@ -50,7 +56,7 @@ public class WeekPagerAdapter extends FragmentStatePagerAdapter {
         int ndx = 0;
         for (Map.Entry<Integer, List<CustomTrackingModel>> parentItem : listOfInclusiveDates.entrySet()) {
             for (CustomTrackingModel innerItem : parentItem.getValue()) {
-                if (innerItem.isSelected) {
+                if (innerItem.isCurrentTrack) {
                     return ndx;
                 }
             }

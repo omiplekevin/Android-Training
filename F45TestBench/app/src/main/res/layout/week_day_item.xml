@@ -10,16 +10,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="@android:color/darker_gray"
-        android:padding="7dp"/>
+        android:padding="@dimen/_7dp"
+        android:text="@string/default_content"
+        android:textColor="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/dayValue"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:gravity="center_horizontal|center_vertical"
-        android:textColor="@android:color/black"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:background="@android:color/transparent"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/default_content"
+        android:textSize="@dimen/date_item_text_size"
+        android:textColor="@android:color/black"/>
 
 </LinearLayout>
