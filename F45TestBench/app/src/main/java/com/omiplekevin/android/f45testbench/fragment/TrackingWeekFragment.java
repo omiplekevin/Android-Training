@@ -44,7 +44,7 @@ public class TrackingWeekFragment extends Fragment {
         TextView text2 = (TextView) view.findViewById(R.id.field2);
 
         text1.setText(this.trackingItem.content);
-        text2.setText(String.valueOf(this.trackingItem.weekOfYear));
+        text2.setText(this.trackingItem.timestamp + " w" + this.trackingItem.weekOfYear + " " + this.trackingItem.isSelected);
         return view;
     }
 }

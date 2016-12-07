@@ -9,10 +9,12 @@ import android.util.Log;
 import com.omiplekevin.android.f45testbench.adapters.TrackingPagerAdapter;
 import com.omiplekevin.android.f45testbench.adapters.WeekPagerAdapter;
 import com.omiplekevin.android.f45testbench.dao.CustomTrackingModel;
+import com.omiplekevin.android.f45testbench.fragment.WeekFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,12 +64,14 @@ public class DualViewPager extends FragmentActivity {
         listener = new WeekDayInteractionListener() {
             @Override
             public void onWeekdaySelected(CustomTrackingModel item) {
+                Log.d("ViewPagerChange", "onWeekdaySelected");
 
                 Calendar sCal = Calendar.getInstance();
                 sCal.setTime(new Date(item.timestamp));
                 Log.d("DualViewPager", String.valueOf(sCal.get(Calendar.MONTH)) + "/" + String.valueOf(sCal.get(Calendar.DATE)) + " selected");
                 updateInclusiveDates(item);
                 weekPagerAdapter.notifyDataSetChanged();
+                trackingPager.setCurrentItem(getActiveTrackingFromWeekPager(), true);
             }
         };
 
@@ -81,9 +85,16 @@ public class DualViewPager extends FragmentActivity {
     }
 
     private void setUpWeekPager(WeekDayInteractionListener listener) {
+        Log.d("ViewPagerChange", "setUpWeekPager");
         weekPagerAdapter = new WeekPagerAdapter(getSupportFragmentManager(), listOfInclusiveDates, listener);
 
         if (weekPager != null) {
+            if (weekPagerAdapter != null) {
+                weekPager.setAdapter(weekPagerAdapter);
+                weekPager.setCurrentItem(weekPagerAdapter.getActiveIndex());
+            } else {
+                Log.e(TAG, "weekPagerAdapter is null");
+            }
             weekPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -92,7 +103,8 @@ public class DualViewPager extends FragmentActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-
+                    Log.d("ViewPager", "weekPager onPageSelected " + position);
+                    trackingPager.setCurrentItem(getActiveTrackingFromWeekPager(), true);
                 }
 
                 @Override
@@ -100,18 +112,13 @@ public class DualViewPager extends FragmentActivity {
 
                 }
             });
-            if (weekPagerAdapter != null) {
-                weekPager.setAdapter(weekPagerAdapter);
-            } else {
-                Log.e(TAG, "weekPagerAdapter is null");
-            }
         } else {
             Log.e(TAG, "weekPager is null");
         }
-        weekPager.setCurrentItem(weekPagerAdapter.getActiveIndex());
     }
 
     private void setUpTrackingPager() {
+        Log.d("ViewPagerChange", "setUpTrackingPager");
         trackingPagerAdapter = new TrackingPagerAdapter(getSupportFragmentManager(), trackingModelList);
         if (trackingPager != null) {
             trackingPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -122,7 +129,13 @@ public class DualViewPager extends FragmentActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-
+                    updateInclusiveDates(trackingModelList.get(position));
+                    weekPagerAdapter.notifyDataSetChanged();
+                    if (((WeekFragment) weekPagerAdapter.getItem(weekPager.getCurrentItem())).getWeekAssigned() != trackingModelList.get(position).weekOfYear) {
+                        List<Object> weeks = new ArrayList<>();
+                        Collections.addAll(weeks, listOfInclusiveDates.keySet().toArray());
+                        weekPager.setCurrentItem(weeks.indexOf(trackingModelList.get(position).weekOfYear));
+                    }
                 }
 
                 @Override
@@ -136,6 +149,7 @@ public class DualViewPager extends FragmentActivity {
                 Log.e(TAG, "trackingPagerAdapter is null");
             }
             trackingPager.setAdapter(trackingPagerAdapter);
+            trackingPager.setCurrentItem(getActiveTrackingFromWeekPager());
         } else {
             Log.e(TAG, "trackingPager is null");
         }
@@ -148,7 +162,6 @@ public class DualViewPager extends FragmentActivity {
 
         //loop until end date
         while (calendar.getTime().before(endDate)) {
-            Log.e("LOOPING...", "ln62 weekpageradapter.java LOOPING...");
             //get the CALENDAR Calendar.WEEK_OF_YEAR
             int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
 
@@ -196,7 +209,6 @@ public class DualViewPager extends FragmentActivity {
             dates.add(model);
             //add it to the mapping
             mapping.put(weekOfYear, dates);
-            Log.d("WeekPagerAdapter", "WoY: " + weekOfYear + ", " + calendar.getTime().getTime());
             //increment CALENDAR
             calendar.add(Calendar.DATE, 1);
         }
@@ -208,7 +220,6 @@ public class DualViewPager extends FragmentActivity {
         for (Map.Entry<Integer, List<CustomTrackingModel>> date : listOfInclusiveDates.entrySet()) {
             List<CustomTrackingModel> datesOfWeek = date.getValue();
             if (datesOfWeek.size() < 7) {
-                Log.w("fillDatePads", date.getKey() + ", filling in...");
                 CustomTrackingModel refModel = datesOfWeek.get(0);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date(refModel.timestamp));
@@ -222,7 +233,6 @@ public class DualViewPager extends FragmentActivity {
                         assignedIndex = assignedIndex + 7;
                     }
                     a[assignedIndex] = model; //[0,1,2...] |n-1|
-                    Log.d("fillDatePads", "set index " + assignedIndex + " to " + model.timestamp);
                 }
                 //fill in paddings
                 Log.d("fillDatePads", Arrays.deepToString(a));
@@ -232,7 +242,6 @@ public class DualViewPager extends FragmentActivity {
                         cal.setTime(new Date(refModel.timestamp));
                         //targetIndex - referenceIndex = additional offset to reference date
                         cal.add(Calendar.DATE, (i - refCurrentHeadNdx) + 1);
-                        Log.d("fillDatePads", (i - refCurrentHeadNdx + 1) + " day adj, " + cal.get(Calendar.DATE) + " day, " + cal.get(Calendar.DAY_OF_WEEK) + " ref: " + refCurrentHeadNdx + " WoY: " + cal.get(Calendar.WEEK_OF_YEAR));
                         a[i] = new CustomTrackingModel(
                                 cal.getTime().getTime(),
                                 cal.get(Calendar.WEEK_OF_YEAR),
@@ -267,13 +276,40 @@ public class DualViewPager extends FragmentActivity {
     }
 
     private void setupDefaults() {
+
         for (Map.Entry<Integer, List<CustomTrackingModel>> entry : listOfInclusiveDates.entrySet()) {
-            for (int i = 0; i < entry.getValue().size(); i++) {
-                CustomTrackingModel item = entry.getValue().get(i);
-                if (item.isInclusiveDate && (i == 0 || item.isStartDate)) {
-                    item.isSelected = true;
+            boolean hasCurrentTrack = false;
+            //overhead lookup
+            for (CustomTrackingModel item : entry.getValue()) {
+                if (item.isCurrentTrack) {
+                    hasCurrentTrack = true;
+                }
+            }
+
+            if (!hasCurrentTrack) {
+                for (int i = 0; i < entry.getValue().size(); i++) {
+                    CustomTrackingModel item = entry.getValue().get(i);
+                    if (item.isInclusiveDate && (i == 0 || item.isStartDate)) {
+                        item.isSelected = true;
+                    }
                 }
             }
         }
+    }
+
+    private int getActiveTrackingFromWeekPager() {
+        List<CustomTrackingModel> item = listOfInclusiveDates.get(listOfInclusiveDates.keySet().toArray()[weekPager.getCurrentItem()]);
+        for (CustomTrackingModel m : item) {
+            if (m != null) {
+                if (m.isSelected) {
+                    Log.i("ViewPagerChange", "getActiveTrackingFromWeekPager: " + trackingModelList.indexOf(m) + " " + trackingModelList.get(trackingModelList.indexOf(m)).weekOfYear);
+                    return trackingModelList.indexOf(m);
+                }
+            } else {
+                Log.e("ViewPagerChange", "m variable is null!");
+            }
+        }
+
+        return 0;
     }
 }

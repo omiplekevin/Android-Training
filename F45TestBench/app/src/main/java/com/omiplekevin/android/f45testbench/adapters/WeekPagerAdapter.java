@@ -35,7 +35,7 @@ public class WeekPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         ArrayList<CustomTrackingModel> items = new ArrayList<>();
         items.addAll(getElementByIndex(listOfInclusiveDates, position));
-        return WeekFragment.getInstance(items, listener);
+        return WeekFragment.getInstance(String.valueOf(getWeekAssignedTag(listOfInclusiveDates, position)), items, listener);
     }
 
     @Override
@@ -50,6 +50,10 @@ public class WeekPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<CustomTrackingModel> getElementByIndex(LinkedHashMap<Integer, List<CustomTrackingModel>> map, int position) {
         return map.get((map.keySet().toArray())[position]);
+    }
+
+    private int getWeekAssignedTag(LinkedHashMap<Integer, List<CustomTrackingModel>> map, int position) {
+        return (int)(map.keySet().toArray())[position];
     }
 
     public int getActiveIndex() {

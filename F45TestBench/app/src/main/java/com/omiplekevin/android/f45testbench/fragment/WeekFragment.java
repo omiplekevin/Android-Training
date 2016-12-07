@@ -27,12 +27,14 @@ import java.util.List;
 public class WeekFragment extends Fragment {
 
     public static final String BUNDLE_TRACKING_ITEMS = "tracking_item";
+    public static final String BUNDLE_TRACKING_WEEK_ASSIGN = "week_assign";
     private List<CustomTrackingModel> itemModels;
     public static volatile DualViewPager.WeekDayInteractionListener listener;
 
-    public static WeekFragment getInstance(ArrayList<CustomTrackingModel> dates, DualViewPager.WeekDayInteractionListener listener) {
+    public static WeekFragment getInstance(String tag, ArrayList<CustomTrackingModel> dates, DualViewPager.WeekDayInteractionListener listener) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BUNDLE_TRACKING_ITEMS, dates);
+        bundle.putString(BUNDLE_TRACKING_WEEK_ASSIGN, tag);
         WeekFragment fragment = new WeekFragment();
         WeekFragment.listener = listener;
         fragment.setArguments(bundle);
@@ -51,7 +53,6 @@ public class WeekFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_week, container, false);
         LinearLayout rootView = (LinearLayout) view.findViewById(R.id.parent);
         for (final CustomTrackingModel date : itemModels) {
-            Log.e("LOOPING...", "ln53 weekfragment.java LOOPING...");
             View dateView = inflater.inflate(R.layout.week_day_item, null);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1F);
             dateView.setLayoutParams(params);
@@ -78,7 +79,6 @@ public class WeekFragment extends Fragment {
             date.getDayLabelView().setText(getDayLabel(c));
 //            updateButtonViews(date, false);
             if (date.isSelected) {
-                Log.w("WeekFragment", "current track !userClicked " + date.isCurrentTrack);
                 if (date.isCurrentTrack) {
                     date.getDayButtonView().setBackgroundResource(R.drawable.bg_circle_currentdate);
                 } else {
@@ -89,13 +89,11 @@ public class WeekFragment extends Fragment {
                 date.getDayButtonView().invalidate();
             } else {
                 if (date.isInclusiveDate || date.isStartDate || date.isEndDate) {
-                    Log.w("WeekFragment", "setup");
                     date.getDayButtonView().setEnabled(true);
                     date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
                     date.getDayButtonView().setTextColor(Color.BLACK);
                     date.getDayButtonView().invalidate();
                 } else {
-                    Log.w("WeekFragment", "outside dates");
                     date.getDayButtonView().setEnabled(false);
                     date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
                     date.getDayButtonView().setTextColor(Color.parseColor("#DDDDDD"));
@@ -103,93 +101,18 @@ public class WeekFragment extends Fragment {
                 }
             }
         }
-        Log.w("WeekFragment", "=========================================");
 
         return view;
     }
 
-    /*private void updateButtonViews(CustomTrackingModel refDate, boolean userClicked) {
-        for (CustomTrackingModel date : itemModels) {
-            if (date.isInclusiveDate || date.isStartDate || date.isEndDate) {
-                if (date.isSelected) {
-                    Log.w("WeekFragment", "same date vs. refDate");
-                    if (userClicked) {
-                        if (date.isSelected && date.isCurrentTrack) {
-                            Log.w("WeekFragment", "current track userClicked");
-                            date.getDayButtonView().setEnabled(true);
-                            date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.bg_circle_currentdate));
-                            date.getDayButtonView().setTextColor(Color.WHITE);
-                            date.getDayButtonView().invalidate();
-                        } else {
-                            Log.w("WeekFragment", "user selection");
-                            date.getDayButtonView().setEnabled(true);
-                            date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.bg_circle_noncurrentdate));
-                            date.getDayButtonView().setTextColor(Color.WHITE);
-                            date.getDayButtonView().invalidate();
-                        }
-                    } else {
-                        if (refDate.isCurrentTrack) {
-                            final CustomTrackingModel fRefDate = refDate;
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.w("WeekFragment", "current track !userClicked " + fRefDate.isCurrentTrack);
-                                    fRefDate.getDayButtonView().setEnabled(true);
-                                    fRefDate.getDayButtonView().setBackgroundResource(R.drawable.bg_circle_currentdate);
-                                    fRefDate.getDayButtonView().setTextColor(Color.WHITE);
-                                    fRefDate.getDayButtonView().invalidate();
-                                }
-                            });
-                        } else {
-                            Log.w("WeekFragment", "setup");
-                            refDate.getDayButtonView().setEnabled(true);
-                            refDate.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
-                            refDate.getDayButtonView().setTextColor(Color.BLACK);
-                            refDate.getDayButtonView().invalidate();
-                        }
-                    }
-
-                } else {
-                    if (date.getDayButtonView() != null) {
-                        Log.w("WeekFragment", "different date vs. refDate");
-                        date.getDayButtonView().setEnabled(true);
-                        date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
-                        date.getDayButtonView().setTextColor(Color.BLACK);
-                        date.getDayButtonView().invalidate();
-                    }
-                }
-            } else {
-                if (date.getDayButtonView() != null) {
-                    Log.w("WeekFragment", "outside dates");
-                    date.getDayButtonView().setEnabled(false);
-                    date.getDayButtonView().setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
-                    date.getDayButtonView().setTextColor(Color.parseColor("#DDDDDD"));
-                    date.getDayButtonView().invalidate();
-                }
-            }
+    public int getWeekAssigned() {
+        try {
+            return Integer.parseInt(getArguments().getString(BUNDLE_TRACKING_WEEK_ASSIGN));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
         }
-        *//*if (date.isInclusiveDate || date.isStartDate || date.isEndDate) {
-            if (date.isCurrentTrack) {
-                Log.w("WeekFragment", "current track");
-                dateValue.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.bg_circle_currentdate));
-                dateValue.setTextColor(Color.WHITE);
-            } else if (userClicked) {
-                Log.w("WeekFragment", "user selection");
-                dateValue.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.bg_circle_noncurrentdate));
-                dateValue.setTextColor(Color.WHITE);
-            } else {
-                Log.w("WeekFragment", "inclusive normal selection");
-                dateValue.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
-            }
-            dateValue.setEnabled(true);
-        } else {
-            dateValue.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), android.R.color.transparent));
-            dateValue.setEnabled(false);
-            dateValue.setTextColor(Color.parseColor("#DDDDDD"));
-        }*//*
-
-
-    }*/
+    }
 
     private String getDayLabel(Calendar c) {
         switch (c.get(Calendar.DAY_OF_WEEK)) {
