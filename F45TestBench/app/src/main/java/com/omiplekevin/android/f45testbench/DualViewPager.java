@@ -57,10 +57,14 @@ public class DualViewPager extends FragmentActivity {
         //set system referred time
         sysCal.setTime(new Date(System.currentTimeMillis()));
 
+        //STEP - 1: create the span of dates
         listOfInclusiveDates = createWeekList(startDate, endDate);
+        //STEP - 2: fill in the lacking dates to pad a week with incomplete days
         fillInDatePadding();
+        //STEP - 3: setDefaults for every week to select MONDAY
         setupDefaults();
 
+        //deep listener from WeekFragment date items
         listener = new WeekDayInteractionListener() {
             @Override
             public void onWeekdaySelected(CustomTrackingModel item) {
@@ -68,14 +72,15 @@ public class DualViewPager extends FragmentActivity {
 
                 Calendar sCal = Calendar.getInstance();
                 sCal.setTime(new Date(item.timestamp));
-                Log.d("DualViewPager", String.valueOf(sCal.get(Calendar.MONTH)) + "/" + String.valueOf(sCal.get(Calendar.DATE)) + " selected");
                 updateInclusiveDates(item);
                 weekPagerAdapter.notifyDataSetChanged();
                 trackingPager.setCurrentItem(getActiveTrackingFromWeekPager(), true);
             }
         };
 
+        //setup the week pager
         setUpWeekPager(listener);
+        //setup the tracking pager
         setUpTrackingPager();
 
     }
@@ -103,7 +108,6 @@ public class DualViewPager extends FragmentActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    Log.d("ViewPager", "weekPager onPageSelected " + position);
                     trackingPager.setCurrentItem(getActiveTrackingFromWeekPager(), true);
                 }
 
@@ -220,14 +224,19 @@ public class DualViewPager extends FragmentActivity {
         for (Map.Entry<Integer, List<CustomTrackingModel>> date : listOfInclusiveDates.entrySet()) {
             List<CustomTrackingModel> datesOfWeek = date.getValue();
             if (datesOfWeek.size() < 7) {
+                //get your current head of the week entries, set as reference point
                 CustomTrackingModel refModel = datesOfWeek.get(0);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date(refModel.timestamp));
+                //get the references' index - this will tell you where to map the head and its trailing entries
                 int refCurrentHeadNdx = cal.get(Calendar.DAY_OF_WEEK) - 1; //[0,1,2...] |n-1|
+                //define a fix-sized array[7] S,M,T,W,Th,F,Sa
                 CustomTrackingModel[] a = new CustomTrackingModel[7];
-                //duplicate to fixed array so we can get locations that needs padding
+                //duplicate to fix-sized array so we can get locations that needs padding
                 for (CustomTrackingModel model : datesOfWeek) {
                     cal.setTime(new Date(model.timestamp));
+                    //adjust indexing by 2 places to ROTATE VALUES of Calendar API
+                    //refer to https://developer.android.com/reference/java/util/Calendar.html#DAY_OF_WEEK
                     int assignedIndex = cal.get(Calendar.DAY_OF_WEEK) - 2;
                     if (assignedIndex < 0) {
                         assignedIndex = assignedIndex + 7;
@@ -235,7 +244,6 @@ public class DualViewPager extends FragmentActivity {
                     a[assignedIndex] = model; //[0,1,2...] |n-1|
                 }
                 //fill in paddings
-                Log.d("fillDatePads", Arrays.deepToString(a));
                 for (int i = 0; i < 7; i++) {
                     if (a[i] == null) {
                         //reset reference
@@ -276,10 +284,9 @@ public class DualViewPager extends FragmentActivity {
     }
 
     private void setupDefaults() {
-
         for (Map.Entry<Integer, List<CustomTrackingModel>> entry : listOfInclusiveDates.entrySet()) {
             boolean hasCurrentTrack = false;
-            //overhead lookup
+            //overhead lookup - check if current week has the current tracking date
             for (CustomTrackingModel item : entry.getValue()) {
                 if (item.isCurrentTrack) {
                     hasCurrentTrack = true;
@@ -302,7 +309,6 @@ public class DualViewPager extends FragmentActivity {
         for (CustomTrackingModel m : item) {
             if (m != null) {
                 if (m.isSelected) {
-                    Log.i("ViewPagerChange", "getActiveTrackingFromWeekPager: " + trackingModelList.indexOf(m) + " " + trackingModelList.get(trackingModelList.indexOf(m)).weekOfYear);
                     return trackingModelList.indexOf(m);
                 }
             } else {
