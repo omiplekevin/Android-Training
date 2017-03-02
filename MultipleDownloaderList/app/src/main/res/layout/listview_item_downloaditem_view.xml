@@ -8,15 +8,6 @@
     android:background="#11102f">
 
     <TextView
-        android:id="@+id/fileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:text="FILENAME HERE..."/>
-
-    <TextView
         android:id="@+id/progressText"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
@@ -35,12 +26,24 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@id/progressText"/>
 
+
+    <TextView
+        android:id="@+id/fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_above="@id/fileDownloadProgress"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:text="FILENAME HERE..."/>
+
     <ImageView
         android:id="@+id/doneImage"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fileName"
+        android:layout_above="@id/fileDownloadProgress"
         android:adjustViewBounds="true"
         android:visibility="invisible"
         android:src="@drawable/circle108"/>

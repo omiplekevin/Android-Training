@@ -1,14 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="#11102f">
+    tools:context=".MainActivity">
 
-    <GridView
-        android:id="@+id/gridDownloadList"
+    <LinearLayout
+        android:id="@+id/parentLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#11102f"
+        android:orientation="vertical" />
+</ScrollView>
+
+
+    <!--<GridView
+            android:id="@+id/gridDownloadList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="3" />-->
+
+    <!--<ListView
+        android:id="@+id/downloadListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="3" />
-
-</RelativeLayout>
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"/>-->

@@ -3,18 +3,29 @@ package com.omiplekevin.android.f45testbench;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private static final String TAG = "F45TestBench";
 
@@ -38,7 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
     private View mContentView;
     private View mControlsView;
+    private ListView demoComponentsListView;
+    private DemoComponentListAdapter adapter;
     private boolean mVisible;
+
+    public static final String CustomTableActivity = "CUSTOMTABLEACTIVITY";
+    public static final String DualViewPager = "DUALVIEWPAGER";
+    public static final String F45Animations = "F45ANIMATIONS";
+    public static final String FlipAnimationActivity = "FLIPANIMATIONACTIVITY";
+    public static final String EventBusActivity = "EVENTBUSACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
+        demoComponentsListView = (ListView) findViewById(R.id.demoComponentsListView);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -59,10 +79,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //setup listview adapter for component list
+        List<String> custom = new ArrayList<>();
+        custom.add(MainActivity.CustomTableActivity);
+        custom.add(MainActivity.DualViewPager);
+        custom.add(MainActivity.F45Animations);
+        custom.add(MainActivity.FlipAnimationActivity);
+        custom.add(MainActivity.EventBusActivity);
+
+        adapter = new DemoComponentListAdapter(this, custom);
+        demoComponentsListView.setAdapter(adapter);
+        demoComponentsListView.setOnItemClickListener(this);
+
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        findViewById(R.id.demoComponentsListView).setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -73,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+
     }
 
     @Override
@@ -178,6 +211,27 @@ public class MainActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (adapter.getItem(position)) {
+            case MainActivity.CustomTableActivity:
+                startActivity(new Intent(this, CustomTableActivity.class));
+                break;
+            case MainActivity.DualViewPager:
+                startActivity(new Intent(this, DualViewPager.class));
+                break;
+            case MainActivity.F45Animations:
+                startActivity(new Intent(this, F45Animations.class));
+                break;
+            case MainActivity.FlipAnimationActivity:
+                startActivity(new Intent(this, FlipAnimationActivity.class));
+                break;
+            case MainActivity.EventBusActivity:
+                startActivity(new Intent(this, EventBusActivity.class));
+                break;
+        }
+    }
+
     /*private void doRequests(){
         new Thread(new Runnable() {
             @Override
@@ -205,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }*/
 
-    public void customCell(View view) {
+    /*public void customCell(View view) {
         Intent intent = new Intent(this, CustomTableActivity.class);
         startActivity(intent);
     }
@@ -223,5 +277,41 @@ public class MainActivity extends AppCompatActivity {
     public void flippingAnimation(View view) {
         Intent intent = new Intent(this, FlipAnimationActivity.class);
         startActivity(intent);
+    }*/
+
+    private class DemoComponentListAdapter extends BaseAdapter{
+
+        Context context;
+        List<String> customUIActivityList;
+
+        public DemoComponentListAdapter(Context context, List<String> customUIActivityList) {
+            this.context = context;
+            this.customUIActivityList = customUIActivityList;
+        }
+
+        @Override
+        public int getCount() {
+            return customUIActivityList.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return customUIActivityList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(this.context).inflate(R.layout.custom_ui_list_item, null);
+
+            TextView textView = (TextView) convertView.findViewById(R.id.itemName);
+            textView.setText(customUIActivityList.get(position));
+
+            return convertView;
+        }
     }
 }

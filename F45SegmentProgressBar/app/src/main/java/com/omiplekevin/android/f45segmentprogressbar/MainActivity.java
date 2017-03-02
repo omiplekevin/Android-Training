@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
-    private static final int FACTOR_DURATION = 1000;
+    private static final int FACTOR_DURATION = 100;
 
     ProgressBarSegment currentWorkSegment;
     LinearLayout parentLayout;
@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                return sendHttpRequest("http://f45timeline.herokuapp.com/v2/timeline/kqeg?cache=0", false, null, "GET", null);
+                return sendHttpRequest("http://f45timeline.herokuapp.com/v2/timeline/gnwp?cache=0", false, null, "GET", null);
             }
 
             @Override
