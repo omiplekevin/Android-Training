@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_one"
+        android:icon="@drawable/ic_play"
+        android:title="Controller"/>
+    <item
+        android:id="@+id/action_two"
+        android:icon="@drawable/ic_list"
+        android:title="Timeline"/>
+
+    <item
+        android:id="@+id/action_three"
+        android:icon="@drawable/ic_dumbbell"
+        android:title="Workouts"/>
+
+    <item
+        android:id="@+id/action_four"
+        android:icon="@drawable/ic_gear"
+        android:title="Setting"/>
+</menu>

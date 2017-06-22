@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="white">#ffffff</color>
+    <color name="textColor_main">#ffffff</color>
+    <color name="bg_screenSpinner">#ffffff</color>
+    <color name="bg_schedule_strip">#e7e7e7</color>
+    <color name="bg_noClass_schedule">#f6f6f6</color>
+
+    <color name="bg_movement_bottom_frame_red">#ee2129</color>
+    <color name="bg_stay_in_station">#ee2129</color>
+    <color name="textColor_playoffs_item_red">#ff0000</color>
+    <color name="bg_error_message">#c10200</color>
+
+    <color name="colorBlue1">#66cccc</color>
+    <color name="colorBlue2">#00e2ff</color>
+    <color name="colorBlue3">#0099cc</color>
+    <color name="colorBlue4">#2474ce</color>
+    <color name="colorBlue5">#166ad8</color>
+    <color name="colorBlue6">#007bda</color>
+    <color name="colorBlue7">#4f58b9</color>
+    <color name="colorBlue8">#4c5296</color>
+    <color name="colorBlue9">#484e91</color>
+    <color name="colorBlue10">#424786</color>
+    <color name="colorBlue11">#424883</color>
+    <color name="colorBlue12">#404a86</color>
+    <color name="colorBlue13">#3c417b</color>
+    <color name="colorBlue14">#383f78</color>
+    <color name="colorBlue15">#373c74</color>
+    <color name="colorBlue16">#373c74</color>
+    <color name="colorBlue17">#383f78</color>
+    <color name="colorBlue18">#373c74</color>
+    <color name="colorBlue19">#80373c74</color>
+    <color name="colorBlue20">#2a2e61</color>
+    <color name="colorBlue21">#262a57</color>
+    <color name="colorBlue22">#dd1f2142</color>
+    <color name="colorBlue23">#1f2142</color>
+    <color name="colorBlue24">#1f1f4a</color>
+    <color name="colorBlue25">#11102f</color>
+</resources>

@@ -1,6 +1,8 @@
 package android.application.com.multipledownloaderlist;
 
 import android.app.Activity;
+import android.application.com.multipledownloaderlist.uicomponent.ParallelDownloader;
+import android.application.com.multipledownloaderlist.uicomponent.helpers.AsyncThreadPoolDownloader;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,19 +26,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends Activity {
 
     List<String> url;
     LinearLayout parentLinearLayout;
+    ParallelDownloader parallelDownloader;
+    HashMap<String, Boolean> itemDownloadCompletionState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        parentLinearLayout = (LinearLayout) findViewById(R.id.parentLinearLayout);
+        parallelDownloader = (ParallelDownloader) findViewById(R.id.parallelDownloader);
+        itemDownloadCompletionState = new HashMap<>();
     }
 
     @Override
@@ -44,13 +50,10 @@ public class MainActivity extends Activity {
         url = new ArrayList<>();
         createDownloadList();
 
-        //declare LinearLayout
-//        ThreadedDownloader threadedDownloader = ThreadedDownloader.getInstance();
-//        ThreadedDownloader.setDownloadableList(url);
-//        Intent threadDownloadIntent = new Intent(this, threadedDownloader.getClass());
-//        this.startService(threadDownloadIntent);
+        parallelDownloader.setDownloadUrlList(url);
+        parallelDownloader.startDownloadQueue();
 
-        for (int i = 0; i < url.size(); i++) {
+        /*for (int i = 0; i < url.size(); i++) {
             View view = LayoutInflater.from(this).inflate(R.layout.listview_item_downloaditem_view, null, false);
             view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     50));
@@ -68,8 +71,8 @@ public class MainActivity extends Activity {
                     doneDownload).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             Log.d("Main", "creating DL view" + view + " for: " + url.get(i));
             parentLinearLayout.addView(view);
-            parentLinearLayout.invalidate();
-        }
+            earLayout.invalidate();
+        }*/
     }
 
     @Override

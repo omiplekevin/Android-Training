@@ -1,16 +1,9 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <LinearLayout
-        android:id="@+id/parentLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#11102f"
-        android:orientation="vertical" />
-</ScrollView>
+<android.application.com.multipledownloaderlist.uicomponent.ParallelDownloader
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parallelDownloader"
+    android:layout_gravity="center|center"
+    android:layout_width="500dp"
+    android:layout_height="300dp"/>
 
 
     <!--<GridView

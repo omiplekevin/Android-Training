@@ -2,7 +2,6 @@ package com.omiplekevin.android.f45testbench;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +16,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.omiplekevin.android.f45testbench.downloadmanagerpro.wrapper.DownloadManager;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final String F45Animations = "F45ANIMATIONS";
     public static final String FlipAnimationActivity = "FLIPANIMATIONACTIVITY";
     public static final String EventBusActivity = "EVENTBUSACTIVITY";
+    public static final String F45PowerNewSkin = "F45POWERNEWSKIN";
+    public static final String DownloadManagers = "DOWNLOADMANAGERS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         custom.add(MainActivity.F45Animations);
         custom.add(MainActivity.FlipAnimationActivity);
         custom.add(MainActivity.EventBusActivity);
+        custom.add(MainActivity.F45PowerNewSkin);
+        custom.add(MainActivity.DownloadManagers);
 
         adapter = new DemoComponentListAdapter(this, custom);
         demoComponentsListView.setAdapter(adapter);
@@ -228,6 +232,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case MainActivity.EventBusActivity:
                 startActivity(new Intent(this, EventBusActivity.class));
+                break;
+            case MainActivity.F45PowerNewSkin:
+                startActivity(new Intent(this, F45PowerNewSkin.class));
+                break;
+            case MainActivity.DownloadManagers:
+                startActivity(new Intent(this, ADMDemo.class));
                 break;
         }
     }

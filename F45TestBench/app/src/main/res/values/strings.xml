@@ -4,4 +4,9 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">MODULE\nPROTOTYPING</string>
     <string name="default_content">--</string>
+
+    <string name="controller">CONTROLLER</string>
+    <string name="timeline">TIMELINE</string>
+    <string name="fm">FM</string>
+    <string name="settings">SETTINGS</string>
 </resources>

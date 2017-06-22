@@ -1,6 +1,9 @@
-package android.application.com.multipledownloaderlist;
+package android.application.com.multipledownloaderlist.uicomponent.helpers;
 
+import android.application.com.multipledownloaderlist.R;
+import android.application.com.multipledownloaderlist.uicomponent.ParallelDownloader;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -30,29 +33,36 @@ import java.net.URLConnection;
 public class AsyncThreadPoolDownloader extends AsyncTask<Void, Integer, Boolean> {
 
     private String sourceUrl;
+    private String fileName;
     private int contentLength, currentPercentage;
     private Context context;
     private View parentView;
     private ProgressBar progressBar;
     private TextView progressText;
-    private TextView filename;
+    private TextView fileNameTextView;
     private ImageView doneCheck;
+
+    private ParallelDownloader.ItemDownloadState listener;
 
     public AsyncThreadPoolDownloader(Context context,
                                      String sourceUrl,
                                      View parentView,
-                             TextView filename,
-                             ProgressBar progressBar,
-                             TextView progressText,
-                             ImageView doneCheck) {
+                                     ParallelDownloader.ItemDownloadState listener) {
         this.context = context;
         this.sourceUrl = sourceUrl;
         this.parentView = parentView;
-        this.filename = filename;
-        this.progressBar = progressBar;
-        this.progressText = progressText;
-        this.doneCheck = doneCheck;
-//            this.callback = callback;
+        this.listener = listener;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        fileName = Uri.parse(this.sourceUrl).getLastPathSegment();
+        fileNameTextView = (TextView) this.parentView.findViewById(R.id.fileName);
+        fileNameTextView.setText(fileName);
+        progressText = (TextView) this.parentView.findViewById(R.id.progressText);
+        progressBar = (ProgressBar) this.parentView.findViewById(R.id.fileDownloadProgress);
+        doneCheck = (ImageView) this.parentView.findViewById(R.id.doneImage);
     }
 
     @Override
@@ -76,8 +86,6 @@ public class AsyncThreadPoolDownloader extends AsyncTask<Void, Integer, Boolean>
                 while ((count = inputStream.read(data)) != -1) {
                     currentTotal += count;
                     outputStream.write(data, 0, count);
-                    //                    final int percentage = (int)(((float)currentTotal / (float)contentLength) * 100);
-                    //                    Log.e("PROGRESS", sourceUrl + " - " + percentage + "");
                     publishProgress(count, 1, currentTotal);
                 }
 
@@ -90,6 +98,9 @@ public class AsyncThreadPoolDownloader extends AsyncTask<Void, Integer, Boolean>
             return true;
         } catch (IOException e) {
             e.printStackTrace();
+            if (listener != null) {
+                listener.onFailed(fileName);
+            }
         }
         return false;
     }
@@ -105,6 +116,9 @@ public class AsyncThreadPoolDownloader extends AsyncTask<Void, Integer, Boolean>
                     this.progressBar.invalidate();
                     this.progressText.setText(Formatter.formatFileSize(context, values[2]));
                 }
+                if (listener != null) {
+                    listener.onProgress(fileName, this.progressBar.getProgress(), values[0]);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,6 +129,9 @@ public class AsyncThreadPoolDownloader extends AsyncTask<Void, Integer, Boolean>
     protected void onPostExecute(Boolean aBoolean) {
         if (aBoolean) {
             this.doneCheck.setVisibility(View.VISIBLE);
+            if (listener != null) {
+                listener.onCompleted(fileName);
+            }
         } else {
             this.doneCheck.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_error));
 //                new VideoDownloadTask(this.sourceUrl, this.progressBar, this.progressText, this.doneCheck, this.callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

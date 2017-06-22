@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">RadioButtonTabs</string>
+    <string name="text_play">Controller</string>
+    <string name="text_timeline">Timeline</string>
+
+</resources>
