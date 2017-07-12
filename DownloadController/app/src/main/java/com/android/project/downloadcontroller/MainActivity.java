@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.android.project.downloadcontroller.controller.DownloadController;
-import com.android.project.downloadcontroller.dao.DownloadRequest;
+import com.android.project.downloadcontroller_lib.controller.DownloadController;
+import com.android.project.downloadcontroller_lib.dao.DownloadRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

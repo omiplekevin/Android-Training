@@ -2,7 +2,7 @@ package com.android.project.downloadcontroller;
 
 import android.app.Application;
 
-import com.android.project.downloadcontroller.controller.DownloadController;
+import com.android.project.downloadcontroller_lib.controller.DownloadController;
 
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>

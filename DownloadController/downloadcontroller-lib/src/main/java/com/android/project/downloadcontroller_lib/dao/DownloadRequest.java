@@ -1,13 +1,13 @@
-package com.android.project.downloadcontroller.dao;
+package com.android.project.downloadcontroller_lib.dao;
 
 import android.app.DownloadManager;
 
-import com.android.project.downloadcontroller.exceptions.RequestInformationIncompleteException;
+import com.android.project.downloadcontroller_lib.exceptions.RequestInformationIncompleteException;
 
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>
  * LAST MODIFIED:   July 07, 2017<br/>
- * IN CLASS:        com.android.project.downloadcontroller.dao<br/>
+ * IN CLASS:        com.android.project.downloadcontroller_lib.dao<br/>
  * <br/>
  * //todo insert definition here...
  * <br/>

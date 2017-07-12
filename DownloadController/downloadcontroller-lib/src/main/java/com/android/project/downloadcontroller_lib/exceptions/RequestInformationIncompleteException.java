@@ -1,9 +1,9 @@
-package com.android.project.downloadcontroller.exceptions;
+package com.android.project.downloadcontroller_lib.exceptions;
 
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>
  * LAST MODIFIED:   July 09, 2017<br/>
- * IN CLASS:        com.android.project.downloadcontroller.exceptions<br/>
+ * IN CLASS:        com.android.project.downloadcontroller_lib.exceptions<br/>
  * <br/>
  * //todo insert definition here...
  * <br/>

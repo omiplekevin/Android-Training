@@ -1,4 +1,4 @@
-package com.android.project.downloadcontroller.controller;
+package com.android.project.downloadcontroller_lib.controller;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.project.downloadcontroller.dao.DownloadRequest;
-import com.android.project.downloadcontroller.exceptions.RequestInformationIncompleteException;
+import com.android.project.downloadcontroller_lib.dao.DownloadRequest;
+import com.android.project.downloadcontroller_lib.exceptions.RequestInformationIncompleteException;
 
 import org.greenrobot.eventbus.EventBus;
 
