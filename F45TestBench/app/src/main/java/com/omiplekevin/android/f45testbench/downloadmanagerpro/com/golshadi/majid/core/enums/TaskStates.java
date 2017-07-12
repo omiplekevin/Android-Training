@@ -11,6 +11,7 @@ public class TaskStates {
     public static final int PAUSED      = 3;
     public static final int DOWNLOAD_FINISHED = 4;
     public static final int END         = 5;
+    public static final int RETRY       = 6;
 
     public static String getTaskState(int state) {
         switch (state) {
@@ -26,6 +27,8 @@ public class TaskStates {
                 return "DOWNLOAD_FINISHED";
             case END:
                 return "END";
+            case RETRY:
+                return "RETRY";
             default:
                 return "UNKNOWN";
         }

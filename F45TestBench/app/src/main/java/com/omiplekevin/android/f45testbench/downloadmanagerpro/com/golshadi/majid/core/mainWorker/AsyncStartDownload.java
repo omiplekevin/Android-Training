@@ -154,6 +154,7 @@ public class AsyncStartDownload extends Thread{
             // depend on file size assign number of chunks; up to Maximum user
             task.resumable = true;
             int MaximumUserCHUNKS = task.chunks/2;
+            Log.d("AsyncStartDownload", "convertTaskToChunks " + MaximumUserCHUNKS + ", " + task.chunks);
             task.chunks = 1;
 
             for (int f=1 ; f <=MaximumUserCHUNKS ; f++)
@@ -171,6 +172,7 @@ public class AsyncStartDownload extends Thread{
     }
 
     private void makeFileForChunks(int firstId, Task task){
+        Log.d("AsyncStartDownload", "makeFileForChunks: " + task.chunks);
         for (int endId = firstId+task.chunks; firstId<endId ; firstId++)
             FileUtils.create(task.save_address, String.valueOf(firstId));
 

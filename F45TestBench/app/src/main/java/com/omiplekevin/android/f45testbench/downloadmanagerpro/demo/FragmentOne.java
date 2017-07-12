@@ -12,11 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.evernote.android.job.JobRequest;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.omiplekevin.android.f45testbench.ADMDemo;
 import com.omiplekevin.android.f45testbench.R;
 import com.omiplekevin.android.f45testbench.downloadmanagerpro.com.golshadi.majid.core.enums.TaskStates;
 import com.omiplekevin.android.f45testbench.downloadmanagerpro.wrapper.DownloadEvent;
 import com.omiplekevin.android.f45testbench.downloadmanagerpro.wrapper.DownloadManager;
+import com.omiplekevin.android.f45testbench.jobscheduler.jobs.RedownloadFile;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -79,7 +82,7 @@ public class FragmentOne extends Fragment {
                 break;
             case TaskStates.DOWNLOADING:
                 //add view here...
-                Log.d("FragmentOne", "onDownloadMessageEvent content: " + payload.toString());
+                Log.d("FragmentOne", "onDownloadMessageEvent onProgress: " + payload.filename + ", " + payload.percentage);
                 if (taskIdView != null) {
                     ViewHolder viewHolder = taskIdView.get((int) payload.taskId);
                     if (viewHolder == null) {
@@ -104,15 +107,19 @@ public class FragmentOne extends Fragment {
                 break;
             case TaskStates.PAUSED:
                 Log.d("FragmentOne", "onDownloadMessageEvent TASK STATE: PAUSED");
-                if (taskIdView != null) {
-                    ViewHolder viewHolder = taskIdView.get((int) payload.taskId);
-                    if (viewHolder != null) {
-                        String labelText = viewHolder.labelTextView.getText().toString();
-                        viewHolder.labelTextView.setText(labelText + " (retrying in " + (payload.countdown % 3 == 0 ? "..." : (payload.countdown % 2 == 0 ? ".." : ".")));
-                    }
-                }
-//                downloadManager.getDownloadManagerPro().dispose();
-                //manipulate view that it is paused
+//              // TODO: Jun 28, 0028 pass this to the JobScheduler to submit for retries!
+                //create new instance of Bundle for JobScheduler
+
+                PersistableBundleCompat bundle = new PersistableBundleCompat();
+                //put the task id
+                bundle.putInt(RedownloadFile.EXTRA_JOB_ID, (int)payload.taskId);
+                //schedule the job
+                RedownloadFile.scheduleJob(downloadManager,
+                        new JobRequest.Builder(RedownloadFile.TAG)
+                                .setExact(3000)
+                                .setExtras(bundle)
+                                .setUpdateCurrent(true)
+                                .build());
                 break;
             case TaskStates.DOWNLOAD_FINISHED:
                 Log.d("FragmentOne", "onDownloadMessageEvent TASK STATE: DOWNLOAD_FINISHED");
@@ -131,6 +138,9 @@ public class FragmentOne extends Fragment {
                 break;
             case TaskStates.END:
                 Log.d("FragmentOne", "onDownloadMessageEvent TASK STATE: END");
+                break;
+            case TaskStates.RETRY:
+
                 break;
         }
     }

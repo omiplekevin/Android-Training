@@ -1,6 +1,7 @@
 package com.omiplekevin.android.f45testbench.downloadmanagerpro.wrapper;
 
 import com.omiplekevin.android.f45testbench.downloadmanagerpro.com.golshadi.majid.core.enums.TaskStates;
+import com.omiplekevin.android.f45testbench.downloadmanagerpro.com.golshadi.majid.report.ReportStructure;
 
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>
@@ -24,6 +25,7 @@ public class DownloadEvent {
     public String savePath;
     public boolean highpriority;
     public boolean overwrite;
+    public boolean retryState = false;
     public int countdown;
 
     public DownloadEvent() {
@@ -55,6 +57,19 @@ public class DownloadEvent {
         this.taskId = taskId;
         this.state = state;
         this.countdown = countdown;
+    }
+
+    public DownloadEvent(ReportStructure structure) {
+        this.taskId = structure.id;
+        this.filename = structure.name;
+        this.state = structure.state;
+        this.source = structure.url;
+        this.fileSize = structure.fileSize;
+        this.fileExtension = structure.type;
+        this.percentage = structure.percent;
+        this.fileSize = structure.downloadLength;
+        this.savePath = structure.saveAddress;
+        this.highpriority = structure.priority;
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.omiplekevin.android.f45testbench;
 import android.app.Application;
 
 import com.evernote.android.job.JobManager;
-import com.omiplekevin.android.f45testbench.jobscheduler.TestBenchJobCreator;
+import com.omiplekevin.android.f45testbench.jobscheduler.jobcreator.RedownloadJobCreator;
 
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>
@@ -18,6 +18,6 @@ public class TestBench extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        JobManager.create(this).addJobCreator(new TestBenchJobCreator());
+        JobManager.create(this).addJobCreator(new RedownloadJobCreator());
     }
 }

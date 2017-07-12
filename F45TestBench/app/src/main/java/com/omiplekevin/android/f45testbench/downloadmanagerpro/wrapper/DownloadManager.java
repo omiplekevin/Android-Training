@@ -43,25 +43,33 @@ public class DownloadManager implements DownloadManagerListener {
     private static final String _DIR_LOGS = _DIR_MAIN + "/log";
     private static final String _DIR_MOVEMENT = _DIR_MAIN + "/movement";
 
+    public static final int ALLOWED_RETRIES = 10;
+    public static final int COUNTDOWN_VALUE = 10;
+    public static final int MAX_CHUNKS = 1;
+    public static final int MAX_ASYNC_DOWNLOADS = 8;
+
     private DownloadManagerPro downloadManagerPro;
     private RequestQueue volleyRequestQueue;
     private List<DownloadEvent> downloadUrls = new ArrayList<>();
     private List<DownloadEvent> downloadItemList = new ArrayList<>();
     private ConcurrentHashMap<Integer, DownloadEvent> mappedDownloadTasks = new ConcurrentHashMap<>();
+
     private ConcurrentHashMap<Long, Integer> attempts = new ConcurrentHashMap<>();
     private int priorityCount = 0;
     private int nonPriorityCount = 0;
-    private int ALLOWED_RETRIES = 10;
-    private int COUNTDOWN_VALUE = 10;
-    private int MAX_CHUNKS = 1;
-    private int MAX_ASYNC_DOWNLOADS = 4;
     private int DOWNLOAD_COUNT = 0;
     private int PRIORITIZATION = QueueSort.HighToLowPriority;
+    //this is the initial backoff countdown
+    private int INITIAL_BACKOFF = 3;
+    private int BACKOFF_FACTOR = 2;
+
+    private boolean ADDED = false;
+    //
 
     private Context context;
     private Subject subject;
 
-    public DownloadManager(Activity activity, Subject subject) {
+    public DownloadManager(Activity activity) {
         this.context = activity.getApplicationContext();
         volleyRequestQueue = Volley.newRequestQueue(this.context);
         /*this.subject = subject;*/
@@ -88,6 +96,15 @@ public class DownloadManager implements DownloadManagerListener {
     @Override
     public void OnDownloadPaused(final long taskId) {
         Log.d("DownloadManager", "OnDownloadPaused: " + taskId + ", state: " + (getDownloadManagerPro().singleDownloadStatus((int)taskId)).state);
+        ReportStructure struct = downloadManagerPro.singleDownloadStatus((int) taskId);
+        if (mappedDownloadTasks.get((int) taskId) == null) {
+            mappedDownloadTasks.put((int) taskId, new DownloadEvent(struct));
+        }
+        if (mappedDownloadTasks != null || struct != null) {
+            mappedDownloadTasks.get((int) taskId).state = TaskStates.PAUSED;
+            mappedDownloadTasks.get((int) taskId).retryState = true;
+            EventBus.getDefault().post(mappedDownloadTasks.get((int) taskId));
+        }
     }
 
     @Override
@@ -102,9 +119,28 @@ public class DownloadManager implements DownloadManagerListener {
                 downloadEvent.percentage = percent;
                 downloadEvent.receivedBytes = downloadedLength;
                 downloadEvent.fileSize = struct.fileSize;
+                if (percent > 19 && !ADDED) {
+                    ADDED = true;
+                    ArrayList<DownloadEvent> addDownloadList = new ArrayList<DownloadEvent>(){{
+                        add(new DownloadEvent("http://f45tv.s3.amazonaws.com/class-logos/warm-up.png", false, true));
+                        add(new DownloadEvent("https://f45tv.s3.amazonaws.com/videos/GYM_LOW_RES/The%20Attention%20Mover%20full%20Body%20Wake%20Up%203048.mp4", true, true));
+                        add(new DownloadEvent("http://f45tv.s3-website-ap-southeast-2.amazonaws.com/videos/GYM_LOW_RES/F45-Hi-Knee-Run-On-The-Spot-3254-661.mp4", true, true));
+                        add(new DownloadEvent("http://f45tv.s3-website-ap-southeast-2.amazonaws.com/videos/GYM_LOW_RES/N%20a%20plyolunge%20Ground%20Touch%203204.mp4", true, true));
+                        add(new DownloadEvent("http://f45tv.s3-website-ap-southeast-2.amazonaws.com/videos/GYM_LOW_RES/Lower%20Ballistics%20shuffle%20And%20Aduction%203067.mp4", true, true));
+                        add(new DownloadEvent("http://f45tv.s3-website-ap-southeast-2.amazonaws.com/videos/GYM_LOW_RES/Hamstring-Stretch-Hammi-Swings.mp4", true, true));
+                        add(new DownloadEvent("https://f45tv.s3.amazonaws.com/videos/GYM_LOW_RES/Pushups-and-Mountain-Climbers-Push-Up-Glute-Pyramid.mp4", true, true));
+                        add(new DownloadEvent("https://f45tv.s3.amazonaws.com/videos/GYM_LOW_RES/Floor%20Or%20Lumbarlying%20Hip%20Flexor%20Pulse%203073.mp4", true, true));
+                        add(new DownloadEvent("http://f45tv.s3-website-ap-southeast-2.amazonaws.com/videos/GYM_LOW_RES/High-Knee-Shuffle-Feet-In-Dif-Directions.mp4", true, true));
+                    }};
+                    addAllFiles(addDownloadList);
+                    prepareFiles();
+                    addToQueue();
+                }
                 EventBus.getDefault().post(downloadEvent);
             } else {
                 Log.d("DownloadManager", "onDownloadProcess downloadEvent is null");
+                Log.d("DownloadManager", "onDownloadProcess adding to mapped items");
+                mappedDownloadTasks.put((int)taskId, new DownloadEvent(struct));
             }
         } else {
             Log.d("DownloadManager", "onDownloadProcess, can't get taskID: " + taskId + ", mappedDownloadTasks: " + mappedDownloadTasks + ", struct: " + struct);
@@ -151,6 +187,7 @@ public class DownloadManager implements DownloadManagerListener {
     public void OnDownloadCompleted(long taskId) {
         Log.d("DownloadManager", "OnDownloadCompleted: " + taskId);
         downloadManagerPro.notifiedTaskChecked();
+        downloadManagerPro.delete((int)taskId, false);
         Log.d("DownloadManager", "OnDownloadCompleted: completed downloads - " + DOWNLOAD_COUNT-- + "/" + downloadUrls.size());
 //        for (int i = 0; i < cdls.size(); i++) {
 //            Log.d("OnDownloadCompleted", "OnDownloadCompleted: last completed" + cdls.get(i).name);
@@ -196,13 +233,15 @@ public class DownloadManager implements DownloadManagerListener {
         PRIORITIZATION = ((prioritization >= 0 && prioritization < 6) ? prioritization : 0);
     }
 
-    public void addToQueue(List<DownloadEvent> downloadEvents) {
+    public void addToQueue() {
         if (mappedDownloadTasks == null) {
             mappedDownloadTasks = new ConcurrentHashMap<>();
         }
+
         for (int i = 0; i < downloadItemList.size(); i++) {
             DownloadEvent item = downloadItemList.get(i);
-            int taskId = downloadManagerPro.addTask(item.filename, item.source.replace(" ", "%20"), 6, item.savePath, item.overwrite, item.highpriority);
+            int taskId = downloadManagerPro.addTask(item.filename, item.source.replace(" ", "%20"), MAX_CHUNKS, item.savePath, item.overwrite, item.highpriority);
+            Log.w(TAG, "addToQueue: assigned new ID from " + downloadItemList.get(i).taskId + " to " + taskId);
             downloadItemList.get(i).taskId = (long) taskId;
             mappedDownloadTasks.put((int) downloadItemList.get(i).taskId, item);
         }
@@ -212,15 +251,16 @@ public class DownloadManager implements DownloadManagerListener {
 
     public void startADMDownloads() {
         if (downloadManagerPro != null) {
-            Log.d(getClass().getSimpleName(), "downloadManagerPro is not null!");
+            Log.d(TAG, "downloadManagerPro is not null!");
             try {
                 downloadManagerPro.startQueueDownload(MAX_ASYNC_DOWNLOADS, PRIORITIZATION);
+                downloadItemList.clear();
             } catch (Exception e) {
-                Log.w(getClass().getSimpleName(), "Task is already on queue and already downloading...");
+                Log.w(TAG, "Task is already on queue and already downloading...");
                 e.printStackTrace();
             }
         } else {
-            Log.d("DownloadManager", "startADMDownloads: downloadManager is null!");
+            Log.d(TAG, "startADMDownloads: downloadManager is null!");
         }
     }
 
@@ -293,32 +333,9 @@ public class DownloadManager implements DownloadManagerListener {
         return downloadManagerPro;
     }
 
-    /*private int doCountdown(final long taskId, final int duration, int attempts, final long timestamp) {
-        Log.d("DownloadManager", "doCountdown");
-        DownloadEvent event = new DownloadEvent();
-        if (mappedDownloadTasks != null) {
-            event = mappedDownloadTasks.get(taskId);
-        }
-        CountDownloadAsync countDownloadAsync = new CountDownloadAsync(new CountDownloadAsync.CountdownListener() {
-            @Override
-            public void onProgress(int attempt, int countdown) {
-                Log.d("DownloadManager", "countdown for " + taskId + " retry download: " + countdown + ", " + attempt + " made");
-            }
-
-            @Override
-            public void onCountdownDone() {
-                Log.d("DownloadManager", "countdown done, should resume download...");
-                try {
-                    getDownloadManagerPro().startDownload((int)taskId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, event, duration, attempts, timestamp);
-        //start counting down for the download...
-        countDownloadAsync.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-        return ++attempts;
-    }*/
+    public ConcurrentHashMap<Long, Integer> getAttempts() {
+        return attempts;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // UTILITIES
@@ -332,7 +349,6 @@ public class DownloadManager implements DownloadManagerListener {
             downloadUrls.get(i).filename = Uri.parse(downloadUrls.get(i).source).getLastPathSegment();
             //remove the file extension from the file name because the downloader appends it automatically
             downloadUrls.get(i).filename = downloadUrls.get(i).filename.replace("." + downloadUrls.get(i).fileExtension, "");
-            downloadUrls.get(i).filename = (downloadUrls.get(i).highpriority ? "HIGHPRIO-" : "") + downloadUrls.get(i).filename;
             //set file save path
             downloadUrls.get(i).savePath = getSavePath(downloadUrls.get(i).source);
 //            Log.d("DownloadManager", "assignFileInformation: " + downloadUrls.toString());
