@@ -1,1 +1,1 @@
-include ':app', ':downloadcontroller-lib-release'
+include ':app', ':downloadcontroller-lib'

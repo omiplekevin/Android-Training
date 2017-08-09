@@ -17,22 +17,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
-
-    private static final String _DIR_MAIN = "/F45";
-    private static final String _DIR_VIDEO = _DIR_MAIN + "/videos";
-    private static final String _DIR_IMAGE = _DIR_MAIN + "/images";
-    private static final String _DIR_MUSIC = _DIR_MAIN + "/music";
-    private static final String _DIR_EXTRAS = _DIR_MAIN + "/extras";
-    private static final String _DIR_TEMP = _DIR_MAIN + "/.temp";
-    private static final String _DIR_APK = _DIR_MAIN + "/apk";
-    private static final String _DIR_LOGS = _DIR_MAIN + "/log";
-    private static final String _DIR_MOVEMENT = _DIR_MAIN + "/movement";
 
     private DownloadController downloadController;
 
@@ -52,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mapDownloadBucket = (TextView) findViewById(R.id.mapDownloads);
         getDownload = (TextView) findViewById(R.id.getState);
         downloadController = ((App) getApplicationContext()).getDownloadController();
+        downloadController.setDownloadQueueLimit(5);
     }
 
     @Override
@@ -107,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
             requests.add(new DownloadRequest(
                     -1,
                     url,
-                    getSavePath(url),
+                    DownloadController.getSavePath(url),
                     Uri.parse(url).getLastPathSegment(),
-                    getFileExtension(url))
+                    DownloadController.getFileExtension(url))
             );
         }
 
@@ -142,70 +132,5 @@ public class MainActivity extends AppCompatActivity {
 
         DownloadRequest request = downloadController.getDownloadState("https://s3-eu-west-1.amazonaws.com/f45fm/mixes/dX1ynpjHRFK3rpCBZ6Wa_Jetstream%2045_DJ%20Chris%20Dominick_July%2011%202017.mp3");
         getDownload.setText(request.getSaveName() + " - " + request.getPercentage() + "\n");
-    }
-
-    public static String getFileExtension(String url) {
-        if (url.contains(".")) {
-            String subUrl = url.substring(url.lastIndexOf('.') + 1);
-            Log.d("DownloadManager", "getFileExtension: " + subUrl);
-            if (subUrl.length() == 0) {
-                return "";
-            }
-
-            if (subUrl.contains("?")) {
-                return subUrl.substring(0, subUrl.indexOf('?'));
-            }
-
-            return subUrl;
-        } else {
-            //option to follow link of get the redirect link from the headers
-        }
-
-        return "";
-    }
-
-    public static String getSavePath(String sourceUrl) {
-        switch (classifier(sourceUrl)) {
-            case 1:
-                return _DIR_VIDEO;
-            case 2:
-                return _DIR_IMAGE;
-            case 3:
-                return _DIR_MUSIC;
-            case 4:
-                return _DIR_MOVEMENT;
-            default:
-                return _DIR_EXTRAS;
-        }
-    }
-
-    public static int classifier(String sourceUrl) {
-        String fileExtension = getFileExtension(sourceUrl);
-        fileExtension = fileExtension.toUpperCase(Locale.getDefault());
-        switch (fileExtension) {
-            case "MP4":
-            case "3GP":
-            case "MOV":
-            case "M4A":
-                //video file classification
-                return 1;
-            case "JPG":
-            case "JPEG":
-            case "PNG":
-            case "BMP":
-                //image file classification
-                return 2;
-            case "MP3":
-            case "OGG":
-            case "WMV":
-                //music file classification
-                return 3;
-            case "GIF":
-                //gif file classification
-                return 4;
-            default:
-                //unknown / unlisted classification
-                return 0;
-        }
     }
 }

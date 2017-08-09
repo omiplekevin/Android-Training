@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DownloadController.iml" filepath="$PROJECT_DIR$/DownloadController.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/downloadcontroller-lib-release/downloadcontroller-lib-release.iml" filepath="$PROJECT_DIR$/downloadcontroller-lib-release/downloadcontroller-lib-release.iml" />
+      <module fileurl="file://$PROJECT_DIR$/downloadcontroller-lib/downloadcontroller-lib.iml" filepath="$PROJECT_DIR$/downloadcontroller-lib/downloadcontroller-lib.iml" />
     </modules>
   </component>
 </project>

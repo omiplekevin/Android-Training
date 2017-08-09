@@ -2,8 +2,6 @@ package com.android.project.downloadcontroller_lib.dao;
 
 import android.app.DownloadManager;
 
-import com.android.project.downloadcontroller_lib.exceptions.RequestInformationIncompleteException;
-
 /**
  * DEVELOPER:       OMIPLEKEVIN<br/>
  * LAST MODIFIED:   July 07, 2017<br/>
@@ -53,12 +51,8 @@ public class DownloadRequest {
         return "DownloadRequest: " + downloadID + " | " + url + " | " + savePath + " | " + saveName + " | " + fileExtension;
     }
 
-    public void setDownloadPercentage(double percentage) throws RequestInformationIncompleteException {
-        if (this.downloadID != -1 && !this.url.isEmpty() && !this.savePath.isEmpty() && !this.saveName.isEmpty() && !this.fileExtension.isEmpty()) {
-            this.percentage = percentage;
-        } else {
-            throw new RequestInformationIncompleteException();
-        }
+    public void setDownloadPercentage(double percentage) {
+        this.percentage = percentage;
     }
 
 

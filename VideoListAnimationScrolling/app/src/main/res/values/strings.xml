@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">VideoListAnimationScrolling</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
-    <color name="blue_overlay">#aa373c74</color>
-</resources>
