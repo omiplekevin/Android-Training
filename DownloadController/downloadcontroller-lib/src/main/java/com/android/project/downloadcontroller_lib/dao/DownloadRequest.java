@@ -22,6 +22,8 @@ public class DownloadRequest {
 
     public String fileExtension = "";
 
+    public long fileSize = 0L;
+
     public double percentage = 0.0d;
 
     public int state = DownloadManager.STATUS_PENDING;
@@ -114,6 +116,14 @@ public class DownloadRequest {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 
 }

@@ -13,7 +13,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,27 +31,16 @@ public class DownloadController {
 
     public static final String TAG = "DownloadController";
 
-    private static final String _DIR_MAIN = "/F45";
-    private static final String _DIR_VIDEO = _DIR_MAIN + "/videos";
-    private static final String _DIR_IMAGE = _DIR_MAIN + "/images";
-    private static final String _DIR_MUSIC = _DIR_MAIN + "/music";
-    private static final String _DIR_EXTRAS = _DIR_MAIN + "/extras";
-    private static final String _DIR_TEMP = _DIR_MAIN + "/.temp";
-    private static final String _DIR_APK = _DIR_MAIN + "/apk";
-    private static final String _DIR_LOGS = _DIR_MAIN + "/log";
-    private static final String _DIR_MOVEMENT = _DIR_MAIN + "/movement";
-
+    private final int MAX_DOWNLOAD_BUCKET_QUEUE = 3;
     private final long POLL_RATE_MS = 1000;
 
     private static volatile DownloadController _instance;
 
     private static DownloadManager downloadManager;
 
-    private int MAX_DOWNLOAD_BUCKET_QUEUE = 3;
+    private final ArrayBlockingQueue<DownloadRequest> downloadBucketQueue = new ArrayBlockingQueue<>(MAX_DOWNLOAD_BUCKET_QUEUE);
+    private final ArrayBlockingQueue<DownloadRequest> waitingQueue = new ArrayBlockingQueue<>(500);
     private HashMap<String, DownloadRequest> downloadRequestMap = new HashMap<>();
-
-    private ArrayBlockingQueue<DownloadRequest> onProcessQueue = new ArrayBlockingQueue<>(MAX_DOWNLOAD_BUCKET_QUEUE);
-    private ArrayBlockingQueue<DownloadRequest> waitingQueue = new ArrayBlockingQueue<>(500);
 
     private ScheduledExecutorService pollUpdater = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture pollUpdaterFuture;
@@ -79,11 +67,6 @@ public class DownloadController {
     public DownloadController(Context context) {
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         getQueuedDownloads();
-    }
-
-    public void setDownloadQueueLimit(int limit) {
-        MAX_DOWNLOAD_BUCKET_QUEUE = limit;
-        onProcessQueue = new ArrayBlockingQueue<>(MAX_DOWNLOAD_BUCKET_QUEUE);
     }
 
     private void getQueuedDownloads() {
@@ -117,9 +100,9 @@ public class DownloadController {
                 );
 
                 //only limit a size of MAX_DOWNLOAD_BUCKET_QUEUE on the download queue of the download manager
-                synchronized (onProcessQueue) {
-                    if (cursor.getInt(stateIndex) == DownloadManager.STATUS_RUNNING && onProcessQueue.remainingCapacity() <= MAX_DOWNLOAD_BUCKET_QUEUE) {
-                        onProcessQueue.add(request);
+                synchronized (downloadBucketQueue) {
+                    if (cursor.getInt(stateIndex) == DownloadManager.STATUS_RUNNING && downloadBucketQueue.remainingCapacity() <= MAX_DOWNLOAD_BUCKET_QUEUE) {
+                        downloadBucketQueue.add(request);
                     } else {
                         Log.w(TAG, "getQueuedDownloads: " + cursor.getString(stateIndex));
                     }
@@ -142,7 +125,7 @@ public class DownloadController {
 
         //check on the waiting list, if there is no duplicate, then add to the waiting list
         boolean shouldAddToWaiting = true;
-        Iterator<DownloadRequest> requestIterator = onProcessQueue.iterator();
+        Iterator<DownloadRequest> requestIterator = downloadBucketQueue.iterator();
         while (requestIterator.hasNext()) {
             if (requestIterator.next().getUrl().equals(request.getUrl())) {
                 shouldAddToWaiting = false;
@@ -181,30 +164,6 @@ public class DownloadController {
         return req;
     }
 
-    private boolean isEnqueued(String sourceUrl) {
-        //check first on the onProcessQueue
-        Iterator<DownloadRequest> bucketRequest = onProcessQueue.iterator();
-        while (bucketRequest.hasNext()) {
-            DownloadRequest br = bucketRequest.next();
-            if (br.getUrl().replace("%20", " ").equals(sourceUrl.replace("%20", " "))) {
-                return true;
-            }
-        }
-
-        //reset iterator(?) to check for waitingQueue
-        bucketRequest = waitingQueue.iterator();
-        while (bucketRequest.hasNext()) {
-            DownloadRequest br = bucketRequest.next();
-            if (br.getUrl().replace("%20", " ").equals(sourceUrl.replace("%20", " "))) {
-                if (br.getState() == DownloadManager.STATUS_SUCCESSFUL || br.getPercentage() == 100F) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public void startListening() {
 
         //start listening to the downloads - with or without
@@ -225,17 +184,15 @@ public class DownloadController {
                         //lets add just ONE item to kick start the requests queuing below
                         DownloadRequest newRequest = waitingQueue.poll();
                         //enqueue download to DownloadManager
-                        if (!isEnqueued(newRequest.getUrl())) {
-                            long downloadID = downloadManager.enqueue(createDownloadManagerRequest(newRequest));
-                            //set the downloadID of the request
-                            newRequest.setDownloadID(downloadID);
-                            //assign the task
-                            downloadRequestMap.get(newRequest.getUrl()).setDownloadID(downloadID);
+                        long downloadID = downloadManager.enqueue(createDownloadManagerRequest(newRequest));
+                        //set the downloadID of the request
+                        newRequest.setDownloadID(downloadID);
+                        //assign the task
+                        downloadRequestMap.get(newRequest.getUrl()).setDownloadID(downloadID);
 
-                            onProcessQueue.add(downloadRequestMap.get(newRequest.getUrl()));
+                        downloadBucketQueue.add(downloadRequestMap.get(newRequest.getUrl()));
 
-                            Log.d(TAG, "adding new items to download, " + onProcessQueue.remainingCapacity() + " available slots");
-                        }
+                        Log.d(TAG, "adding new items to download, " + downloadBucketQueue.remainingCapacity() + " available slots");
                     }
                 } else {
                     Log.e(TAG, "======================================================");
@@ -261,56 +218,37 @@ public class DownloadController {
                                 cursor.getLong(receivedSizeIndex) + ", " +
                                 cursor.getLong(totalSizeIndex));
                         float percentage = ((float) cursor.getLong(receivedSizeIndex) / (float) cursor.getLong(totalSizeIndex)) * 100F;
+                        downloadRequestMap.get(cursor.getString(uriIndex)).setDownloadPercentage(percentage);
+                        downloadRequestMap.get(cursor.getString(uriIndex)).setState(cursor.getInt(statusIndex));
 
-                        if (percentage < 0) {
-                            Log.w(TAG, "NEGATIVE! " + cursor.getString(uriIndex) + " - " +
-                                    cursor.getLong(receivedSizeIndex) + " - " +
-                                    cursor.getLong(totalSizeIndex));
-                        }
-                        try {
-                            downloadRequestMap.get(cursor.getString(uriIndex)).setDownloadPercentage(percentage);
-                            downloadRequestMap.get(cursor.getString(uriIndex)).setState(cursor.getInt(statusIndex));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            //create a new record
-                            mapDownloadRequests(new DownloadRequest(
-                                    cursor.getLong(idIndex),
-                                    cursor.getString(uriIndex),
-                                    getSavePath(cursor.getString(uriIndex)),
-                                    Uri.parse(cursor.getString(uriIndex)).getLastPathSegment(),
-                                    getFileExtension(cursor.getString(uriIndex))));
-                        }
 
                         if (cursor.getInt(statusIndex) == DownloadManager.STATUS_SUCCESSFUL) {
                             Log.w(TAG, "we have complete download: " + cursor.getString(uriIndex));
-                            boolean removedItem = onProcessQueue.remove(downloadRequestMap.get(cursor.getString(uriIndex)));
+                            boolean removedItem = downloadBucketQueue.remove(downloadRequestMap.get(cursor.getString(uriIndex)));
                             waitingQueue.remove(downloadRequestMap.get(cursor.getString(uriIndex)));
-                            Log.w(TAG, "we have removed item from bucket: " + removedItem + ", new size: " + onProcessQueue.size());
+                            Log.w(TAG, "we have removed item from bucket: " + removedItem + ", new size: " + downloadBucketQueue.size());
                         }
 
                     } while (cursor.moveToNext());
                     cursor.close();
 
                     //queue this to download
-                    if (onProcessQueue.remainingCapacity() > 0 && waitingQueue.size() > 0) {
+                    if (downloadBucketQueue.remainingCapacity() > 0 && waitingQueue.size() > 0) {
                         //fill in new item(s) to the bucket depending on the allowed slots on the downloadBucket
-                        for (int i = 0; i < onProcessQueue.remainingCapacity(); i++) {
-                            Log.d(TAG, "adding new items to download, " + onProcessQueue.remainingCapacity() + " available slots");
+                        for (int i = 0; i < downloadBucketQueue.remainingCapacity(); i++) {
+                            Log.d(TAG, "adding new items to download, " + downloadBucketQueue.remainingCapacity() + " available slots");
                             DownloadRequest newRequest = waitingQueue.poll();
-                            //check if is on queue
-                            if (!isEnqueued(newRequest.getUrl())) {
-                                //enqueue download to DownloadManager
-                                long downloadID = downloadManager.enqueue(createDownloadManagerRequest(newRequest));
-                                //set the downloadID of the request
-                                newRequest.setDownloadID(downloadID);
-                                //assign the task
-                                downloadRequestMap.get(newRequest.getUrl()).setDownloadID(downloadID);
+                            //enqueue download to DownloadManager
+                            long downloadID = downloadManager.enqueue(createDownloadManagerRequest(newRequest));
+                            //set the downloadID of the request
+                            newRequest.setDownloadID(downloadID);
+                            //assign the task
+                            downloadRequestMap.get(newRequest.getUrl()).setDownloadID(downloadID);
 
-                                onProcessQueue.add(downloadRequestMap.get(newRequest.getUrl()));
-                            }
+                            downloadBucketQueue.add(downloadRequestMap.get(newRequest.getUrl()));
                         }
                     } else {
-                        Log.w(TAG, onProcessQueue.remainingCapacity() + "/" + MAX_DOWNLOAD_BUCKET_QUEUE + " download bucket is full...");
+                        Log.w(TAG, downloadBucketQueue.remainingCapacity() + "/" + MAX_DOWNLOAD_BUCKET_QUEUE + " download bucket is full...");
                     }
 
                     try {
@@ -362,71 +300,6 @@ public class DownloadController {
         Iterator<DownloadRequest> iterator = request.iterator();
         while (iterator.hasNext()) {
             Log.w(TAG, tag + " QUEUE: " + iterator.next().getUrl());
-        }
-    }
-
-    public static String getFileExtension(String url) {
-        if (url.contains(".")) {
-            String subUrl = url.substring(url.lastIndexOf('.') + 1);
-            Log.d("DownloadManager", "getFileExtension: " + subUrl);
-            if (subUrl.length() == 0) {
-                return "";
-            }
-
-            if (subUrl.contains("?")) {
-                return subUrl.substring(0, subUrl.indexOf('?'));
-            }
-
-            return subUrl;
-        } else {
-            //option to follow link of get the redirect link from the headers
-        }
-
-        return "";
-    }
-
-    public static String getSavePath(String sourceUrl) {
-        switch (classifier(sourceUrl.replace("%20", " "))) {
-            case 1:
-                return _DIR_VIDEO;
-            case 2:
-                return _DIR_IMAGE;
-            case 3:
-                return _DIR_MUSIC;
-            case 4:
-                return _DIR_MOVEMENT;
-            default:
-                return _DIR_EXTRAS;
-        }
-    }
-
-    public static int classifier(String sourceUrl) {
-        String fileExtension = getFileExtension(sourceUrl.replace("%20", " "));
-        fileExtension = fileExtension.toUpperCase(Locale.getDefault());
-        switch (fileExtension) {
-            case "MP4":
-            case "3GP":
-            case "MOV":
-            case "M4A":
-                //video file classification
-                return 1;
-            case "JPG":
-            case "JPEG":
-            case "PNG":
-            case "BMP":
-                //image file classification
-                return 2;
-            case "MP3":
-            case "OGG":
-            case "WMV":
-                //music file classification
-                return 3;
-            case "GIF":
-                //gif file classification
-                return 4;
-            default:
-                //unknown / unlisted classification
-                return 0;
         }
     }
 }
