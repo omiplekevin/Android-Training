@@ -2,4 +2,4 @@ Android-Training
 ================
 
 Android Training 
-Sample Training Source Code for Android
+Source Code for Android
