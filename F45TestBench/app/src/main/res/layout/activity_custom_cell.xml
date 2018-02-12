@@ -6,22 +6,36 @@
     tools:context=".CustomTableActivity">
 
     <LinearLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addStrip"
+        android:text="AddStrip" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/rootLayout"/>
+        android:layout_gravity="end">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AddStrip"
-        android:onClick="addStrip"/>
+        <Button
+            android:id="@+id/startRand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="startRandom"
+            android:text="Start Random" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Rand Mornings"
-        android:layout_gravity="end"
-        android:onClick="addMornings"/>
-
+        <Button
+            android:id="@+id/stopRand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop Random"
+            android:enabled="false"
+            android:onClick="stopRandom"/>
+    </LinearLayout>
 </FrameLayout>
