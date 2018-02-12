@@ -20,7 +20,6 @@ public class F45ScheduleStrip extends LinearLayout implements OnScheduleUpdateLi
     public int afternoonDataCount = 0;
     public int eveningDataCount = 0;
 
-
     public F45ScheduleStrip(Context context) {
         super(context);
         this.context = context;
