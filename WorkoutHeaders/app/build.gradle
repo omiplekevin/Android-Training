@@ -9,6 +9,23 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "host", "\"http://matrix.f45.info/v1/\"")
+        buildConfigField("boolean", "debuggerViews", "false")
+        buildConfigField("boolean", "enableCrashlytics", "false")
+        buildConfigField("String", "timelineHost", "\"http://f45timeline.herokuapp.com/\"")
+        buildConfigField("String", "defaultTimelineVersion", "\"7\"")
+        buildConfigField("String", "timeline", "\"/timeline/\"")
+        buildConfigField("String", "timelines", "\"timelines/\"")
+        buildConfigField("String", "databaseSchema", "\"f45power\"")
+        buildConfigField("String", "compliance", "\"http://matrix.f45.info/v1/compliance_issues/franchisee/issues/\"")
+        buildConfigField("String", "programs", "\"programs/search\"")
+        buildConfigField("String", "weeklyTimeline", "\"timelines/week/\"")
+        buildConfigField("String", "vimeo_api_base", "\"https://api.vimeo.com/videos/\"")
+        buildConfigField("String", "f45playbook_s3", "\"http://f45playbook.s3.amazonaws.com/movement-gifs/resize/\"")
+        buildConfigField("String", "f45tv_s3", "\"https://f45tv.s3.amazonaws.com/movement-gifs/\"")
+        buildConfigField("String", "workouts_all", "\"workouts\"")
+        buildConfigField("String", "f45beatsfeedback", "\"http://f45beats-staging.herokuapp.com/feedback\"")
     }
     buildTypes {
         release {
@@ -46,4 +63,11 @@ dependencies {
     //retrofit
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+
+    //common-io
+    compile 'commons-io:commons-io:2.4'
+
+    //stetho
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }

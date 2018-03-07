@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">WorkoutHeaders</string>
+
+    <!-- WORKOUT WEEK SECTIONS -->
+    <string name="label_workout_opening_day">OPENING</string>
+
+    <!-- PLACEHOLDERS-->
+    <string name="label_week_abbrevation">WK %1$s</string>
+
+    <string-array name="day_of_the_week">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
 </resources>
