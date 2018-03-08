@@ -1,10 +1,12 @@
 package com.android.omiplekevin.workoutheaders.model.timeline;
 
+import com.android.omiplekevin.workoutheaders.model.ExercisesRelationModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -101,5 +103,11 @@ public class WorkoutAll implements Serializable {
         private String formatted_day_label = "";
         @Getter @Setter
         private String formatted_date_label = "";
+
+        @Getter @Setter
+        private List<String> workoutDescriptionList = new ArrayList<>();
+
+        @Getter @Setter
+        private ExercisesRelationModel exerciseRelations;
     }
 }

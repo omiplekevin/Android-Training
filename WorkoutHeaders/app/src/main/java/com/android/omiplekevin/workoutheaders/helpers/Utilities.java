@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.CookieManager;
 
+import com.android.omiplekevin.workoutheaders.R;
 import com.android.omiplekevin.workoutheaders.helpers.Constants;
 import com.android.omiplekevin.workoutheaders.model.timeline.TimelineModel;
+import com.android.omiplekevin.workoutheaders.network.RequestService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +29,9 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
 /**
  * Created by OMIPLEKEVIN on 12/11/2015.
@@ -438,5 +443,40 @@ public class Utilities {
         }
 
         return file;
+    }
+
+    public static String getHeaderTagFromCall(Call<ResponseBody> call, String headerField) {
+        if (call != null) {
+            String tagContent = call.request().header(headerField);
+            if (tagContent == null || tagContent.isEmpty()) {
+                Log.w(TAG, "getHeaderTagFromCall: Unknown header '" + tagContent + "'");
+                return "";
+            } else {
+                return call.request().header(headerField);
+            }
+        } else {
+            Log.w(TAG, "getHeaderTagFromCall: call is " + call);
+            return "";
+        }
+    }
+
+    /**
+     * get current config session information by day
+     *
+     * @param playbookTimeline source timeline
+     * @return jsonObject of selected day
+     */
+    public static JSONObject getWeekdayConfigInformation(Context context, JSONObject playbookTimeline, int weekday) {
+        String[] days = context.getResources().getStringArray(R.array.playbook_week);
+        String currDay = days[weekday - 1];
+        Log.d(TAG, "getWeekdayConfigInformation: weekday[" + weekday + "] " + currDay);
+        try {
+            JSONObject data = playbookTimeline.getJSONObject("data").getJSONObject("weeklyTimeline").getJSONObject(currDay);
+            Log.d(TAG, "REQUEST: current day timeline info: " + data.toString());
+            return data;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

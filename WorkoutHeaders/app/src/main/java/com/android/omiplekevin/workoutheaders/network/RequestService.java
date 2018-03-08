@@ -27,6 +27,9 @@ public interface RequestService {
     @Getter
     public static final String HEADER_FIELD_TAG = "tag";
 
+    @Getter
+    public static final String HEADER_FIELD_LIST_POSITION = "position";
+
     @GET("{timelineVersion}/timeline/{accessCode}")
     Call<ResponseBody> getTimeline(@Path("timelineVersion") String timelineVersion, @Path("accessCode") String accessCode, @Header(HEADER_FIELD_TAG) String requestTag);
 
@@ -43,7 +46,7 @@ public interface RequestService {
     Call<ResponseBody> getCompliance(@Path("franchiseeId") String franchiseeId, @Header(HEADER_FIELD_TAG) String requestTag);
 
     @GET(BuildConfig.weeklyTimeline + "{week}")
-    Call<ResponseBody> getPlaybookTimeline(@Path("week") String week, @Header(HEADER_FIELD_TAG) String tag);
+    Call<ResponseBody> getPlaybookTimeline(@Path("week") String week, @Header(HEADER_FIELD_TAG) String tag, @Header(HEADER_FIELD_LIST_POSITION) int position);
 
     @GET(BuildConfig.programs + "/{workoutName}")
     Call<ResponseBody> getPrograms(@Path("workoutName") String workoutName, @Header(HEADER_FIELD_TAG) String tag);

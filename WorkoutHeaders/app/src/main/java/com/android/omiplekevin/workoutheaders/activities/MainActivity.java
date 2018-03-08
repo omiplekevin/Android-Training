@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Response
         if (responseBody.isSuccessful()) {
             try {
                 final String response = responseBody.body().string();
-                String tag = getHeaderTagFromCall(call);
+                String tag = Utilities.getHeaderTagFromCall(call, RequestService.HEADER_FIELD_TAG);
                 switch (tag) {
                     case Constants.REQUEST_GET_TIMELINE:
                         Constants.TIMELINE_MODEL = new Gson().fromJson(response, TimelineModel.class);
@@ -254,21 +254,6 @@ public class MainActivity extends AppCompatActivity implements Callback<Response
             workoutRecyclerView.setAdapter(workoutAdapter);
         } else {
             Log.e(TAG, "setupWorkoutHeaderListView: workoutAdapter is null!");
-        }
-    }
-
-    private String getHeaderTagFromCall(Call<ResponseBody> call) {
-        if (call != null) {
-            String tagContent = call.request().header(RequestService.HEADER_FIELD_TAG);
-            if (tagContent == null || tagContent.isEmpty()) {
-                Log.w(TAG, "getHeaderTagFromCall: Unknown header '" + tagContent + "'");
-                return "";
-            } else {
-                return call.request().header(RequestService.HEADER_FIELD_TAG);
-            }
-        } else {
-            Log.w(TAG, "getHeaderTagFromCall: call is " + call);
-            return "";
         }
     }
 
