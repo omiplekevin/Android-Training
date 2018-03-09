@@ -115,9 +115,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutViewHolder> impl
         playbookTimelineRequest.enqueue(this);
     }
 
-    //private fields
-    private JSONObject playbookWeekTimeline;
     private void setPlaybookTimeline(String response) {
+        JSONObject playbookWeekTimeline;
         if (response != null && !response.isEmpty()) {
             try {
                 playbookWeekTimeline = new JSONObject(response);

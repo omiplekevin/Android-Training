@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements Callback<Response
                             item.workout_name = data.workout_name;
                             item.setWorkoutUrl(Utilities.getLogoPath(data.workout_name));
                             item.setDayOfWeek(this.getResources().getStringArray(R.array.day_of_the_week)[Integer.parseInt(item.getSystemWeekday()) - 1].toUpperCase());
-                            item.getCalendar().set(Calendar.DAY_OF_YEAR, (7 * (Integer.parseInt(item.week) - 1) + Integer.parseInt(item.weekday)));
+                            data.getCalendar().set(Calendar.DAY_OF_YEAR, (7 * (Integer.parseInt(item.week) - 1) + Integer.parseInt(item.weekday)));
                             //set text to be displayed
                             if (Constants.PROGRAM.equals(Constants.WORKOUTS)) {
                                 item.setFormatted_day_label(item.getDayOfWeek().substring(0, 3));
