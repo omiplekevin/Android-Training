@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/shotWithRearWide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shotRearWide"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/shotWithRearStandard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shotRearStandard"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shotWithRearWide" />
+
+    <Button
+        android:id="@+id/shotWithFrontWide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shotFrontWide"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shotWithRearStandard" />
+
+    <Button
+        android:id="@+id/shotWithFrontStandard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shotFrontStandard"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shotWithFrontWide" />
+
+    <Button
+        android:id="@+id/getBatteryLevelBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/get_battery_level"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shotWithFrontStandard"/>
+
+    <TextView
+        android:id="@+id/batteryLevelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/getBatteryLevelBtn"
+        app:layout_constraintLeft_toRightOf="@id/getBatteryLevelBtn"
+        app:layout_constraintTop_toTopOf="@id/getBatteryLevelBtn" />
+
+</android.support.constraint.ConstraintLayout>

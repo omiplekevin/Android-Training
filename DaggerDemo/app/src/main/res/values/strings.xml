@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DaggerDemo</string>
+
+    <string name="get_battery_level">Get Battery Level</string>
+    <string name="shotRearWide">Shot Rear Wide</string>
+    <string name="shotRearStandard">Shot Rear Standard</string>
+    <string name="shotFrontWide">Shot Front Wide</string>
+    <string name="shotFrontStandard">Shot Front Standard</string>
+</resources>
